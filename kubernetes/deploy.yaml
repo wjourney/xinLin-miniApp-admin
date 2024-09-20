@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment #对象类型
+metadata:
+  name: miaohua-admin-fe #名称
+  labels:
+    app: miaohua-admin-fe #标注
+spec:
+  replicas: 1 #运行容器的副本数，修改这里可以快速修改分布式节点数量
+  selector:
+    matchLabels:
+      app: miaohua-admin-fe
+  template:
+    metadata:
+      labels:
+        app: miaohua-admin-fe
+    spec:
+      imagePullSecrets:
+        - name: secret-0905
+      containers: #docker容器的配置
+        - name: miaohua-admin-fe
+          image: registry.sensetime.com/xlab/maka/miaohua-admin-fe-pro:latest
+          imagePullPolicy: Always #pull镜像时机，
+          ports:
+            - containerPort: 80 #容器对外开放端口
+      # 解决没有调动权限pod一直pending的问题
+      tolerations:
+        - key: 'project'
+          value: 'miaohua'
+          operator: 'Equal'
+          effect: 'NoExecute'

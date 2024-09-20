@@ -1,0 +1,16 @@
+## Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: miaohua-admin-fe-test
+  labels:
+    app: miaohua-admin-fe-test
+spec:
+  type: NodePort
+  ports:
+    - name: miaohua-admin-fe-test
+      port: 80
+      targetPort: 80
+      nodePort: 30889
+  selector:
+    app: miaohua-admin-fe-test
