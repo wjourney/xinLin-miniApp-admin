@@ -319,6 +319,16 @@ const HouseManagement: react.FC = () => {
       width: 80,
     },
     {
+      title: "招商顾问",
+      dataIndex: "managers",
+      width: 200,
+      render: (_: any, record: any) => (
+        <Space direction="vertical">
+          {record?.managers?.map((item: any) => <div>{item?.name}</div>)}
+        </Space>
+      ),
+    },
+    {
       title: "标签",
       dataIndex: "labels",
       width: 80,

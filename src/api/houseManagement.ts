@@ -42,7 +42,7 @@ export const addHouse = (body: any): Promise<any> => {
 // 修改房源
 export const updateHouse = (id: any, body: any): Promise<any> => {
   return serviceAxios({
-    url: `/adm//house/update/${id}`,
+    url: `/adm/house/update/${id}`,
     method: 'put',
     headers: {
       'Content-Type': 'application/json'

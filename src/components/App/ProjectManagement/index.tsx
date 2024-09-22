@@ -88,6 +88,7 @@ const ProjectManagement: react.FC = () => {
     try {
       // 触发表单校验
       const values = await form.validateFields();
+      console.log("valuse", values);
       // 校验通过，获取表单值进行处理
       const parkImagesUrls = values?.images?.map(
         (item: any) => item?.response?.data?.url || item?.url
@@ -99,7 +100,7 @@ const ProjectManagement: react.FC = () => {
         parkId: id,
         address: values?.address,
         company: values?.company,
-        managerId: values?.managerId,
+        managers: values?.managers,
         thumbnail: coverImageUrl?.[0],
         floorHeight: values?.floorHeight,
         introduce: values?.introduce,
@@ -172,6 +173,8 @@ const ProjectManagement: react.FC = () => {
     try {
       // 触发表单校验
       const values = await form.validateFields();
+      console.log("valuse", values);
+
       // 校验通过，获取表单值进行处理
       const parkImagesUrls = values?.images?.map(
         (item: any) => item?.response?.data?.url || item?.url
@@ -182,7 +185,7 @@ const ProjectManagement: react.FC = () => {
       const payload = {
         address: values?.address,
         company: values?.company,
-        managerId: values?.managerId,
+        managers: values?.managers,
         thumbnail: coverImageUrl?.[0],
         floorHeight: values?.floorHeight,
         introduce: values?.introduce,
@@ -254,6 +257,31 @@ const ProjectManagement: react.FC = () => {
       width: 200,
     },
     {
+      title: "招商顾问",
+      dataIndex: "managers",
+      width: 200,
+      render: (_: any, record: any) => (
+        <Space direction="vertical">
+          {record?.managers?.map((item: any) => <div>{item?.name}</div>)}
+        </Space>
+      ),
+    },
+    {
+      title: "楼层数",
+      dataIndex: "totalFloor",
+      width: 80,
+    },
+    {
+      title: "标准层层高",
+      dataIndex: "floorHeight",
+      width: 80,
+    },
+    {
+      title: "时间",
+      dataIndex: "createdAt",
+      width: 80,
+    },
+    {
       title: "园区图片",
       dataIndex: "latitude",
       render: (_: any, record: any) => (
@@ -278,21 +306,6 @@ const ProjectManagement: react.FC = () => {
         />
       ),
       width: 160,
-    },
-    {
-      title: "楼层数",
-      dataIndex: "totalFloor",
-      width: 80,
-    },
-    {
-      title: "标准层层高",
-      dataIndex: "floorHeight",
-      width: 80,
-    },
-    {
-      title: "时间",
-      dataIndex: "createdAt",
-      width: 80,
     },
     {
       title: "操作",
@@ -329,6 +342,7 @@ const ProjectManagement: react.FC = () => {
               form.setFieldsValue({
                 ...record,
                 images: formattedImagesFileList,
+                managers: record?.managers?.map((item: any) => item?.id),
                 thumbnail: [
                   {
                     uid: `-1`, // 每个文件需要唯一的 uid
@@ -484,10 +498,10 @@ const ProjectManagement: react.FC = () => {
 
           <Form.Item
             label="招商顾问"
-            name="managerId"
+            name="managers"
             rules={[{ required: true, message: "请选择招商顾问!" }]}
           >
-            <Select options={managerData} />
+            <Select options={managerData} mode="multiple" />
           </Form.Item>
           <Form.Item
             label="园区介绍"
