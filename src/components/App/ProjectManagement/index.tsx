@@ -522,6 +522,7 @@ const ProjectManagement: react.FC = () => {
             <Upload
               listType="picture-card"
               name="file"
+              accept="image/*" // 只接受图片文件
               action="/adm/upload_image"
               maxCount={8}
               fileList={parkImagesFileList}
@@ -552,6 +553,7 @@ const ProjectManagement: react.FC = () => {
               name="file"
               action="/adm/upload_image"
               maxCount={1}
+              accept="image/*" // 只接受图片文件
               fileList={coverImageFileList}
               onChange={handleUploadCoverImageChange}
             >

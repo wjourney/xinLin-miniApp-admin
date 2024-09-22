@@ -673,6 +673,7 @@ const HouseManagement: react.FC = () => {
               //   authorization: "authorization-text"
               // }
               maxCount={8}
+              accept="image/*" // 只接受图片文件
               fileList={houseImagesFileList}
               onChange={handleUploadHouseImagesChange}
             >
@@ -703,6 +704,7 @@ const HouseManagement: react.FC = () => {
               maxCount={1}
               fileList={coverImageFileList}
               onChange={handleUploadCoverImageChange}
+              accept="image/*" // 只接受图片文件
             >
               {coverImageFileList.length >= 1 ? null : uploadButton}
             </Upload>
