@@ -337,7 +337,9 @@ const HouseManagement: react.FC = () => {
           "-"
         ) : (
           <Space>
-            {record?.map((item: string) => <Tag color="green">{item}</Tag>)}
+            {record?.labels?.map((item: string) => (
+              <Tag color="green">{item}</Tag>
+            ))}
           </Space>
         ),
     },
