@@ -162,7 +162,7 @@ const HouseManagement: react.FC = () => {
         wuyeFee: values?.wuyeFee,
         floor: values?.floor,
         zhxiu: values?.zhxiu,
-        managerId: values?.managerId,
+        managers: [values?.managers],
         thumbnail: coverImageUrl?.[0],
         floorHeight: values?.floorHeight,
         detail: values?.detail,
@@ -214,7 +214,7 @@ const HouseManagement: react.FC = () => {
         wuyeFee: values?.wuyeFee,
         floor: values?.floor,
         zhxiu: values?.zhxiu,
-        managerId: values?.managerId,
+        managers: [values?.managers],
         thumbnail: coverImageUrl?.[0],
         floorHeight: values?.floorHeight,
         detail: values?.detail,
@@ -409,6 +409,7 @@ const HouseManagement: react.FC = () => {
               form.setFieldsValue({
                 ...record,
                 images: formattedImagesFileList,
+                managers: record?.managers?.map((item: any) => item?.id),
                 thumbnail: [
                   {
                     uid: `-1`, // 每个文件需要唯一的 uid
@@ -634,7 +635,7 @@ const HouseManagement: react.FC = () => {
           </Form.Item>
           <Form.Item
             label="招商顾问"
-            name="managerId"
+            name="managers"
             rules={[{ required: true, message: "请选择招商顾问!" }]}
           >
             <Select options={managerData} />
