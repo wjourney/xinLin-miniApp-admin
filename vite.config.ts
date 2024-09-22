@@ -12,17 +12,13 @@ export default defineConfig({
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.vue', '.json']
   },
-  server: {
-    proxy: {
-      // '/api2': {
-      //   target: 'http://10.142.36.136:30047', // 测试环境的数据地址
-      //   changeOrigin: true
-      // },
-      '/adm': {
-        target: 'http://124.223.37.126:3005', // 测试环境的数据地址
-        // target: 'https://11v9336h60.goho.co', // 测试环境的数据地址
-        changeOrigin: true
-      }
-    }
-  }
+  // server: {
+  //   proxy: {
+  //     '/adm': {
+  //       target: 'http://124.223.37.126:3005', // 测试环境的数据地址
+  //       // target: 'https://11v9336h60.goho.co', // 测试环境的数据地址
+  //       changeOrigin: true
+  //     }
+  //   }
+  // }
 });
