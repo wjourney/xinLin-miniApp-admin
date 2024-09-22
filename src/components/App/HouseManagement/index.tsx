@@ -346,7 +346,7 @@ const HouseManagement: react.FC = () => {
     {
       title: "时间",
       dataIndex: "createdAt",
-      width: 100,
+      width: 150,
     },
     {
       title: "房源图片",
