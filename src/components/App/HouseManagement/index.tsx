@@ -179,9 +179,10 @@ const HouseManagement: react.FC = () => {
       const res = await updateHouse(id, payload);
       const { code, data } = res;
       if (code === 200) {
-        message.success("添加项目成功");
+        message.success("修改房源成功");
         handleGetHouseList(currentPage);
         setIsAddOrEditHouseModalVisible(false);
+        form.resetFields();
       }
     } catch (errorInfo) {
       // 校验失败时的处理
@@ -195,18 +196,17 @@ const HouseManagement: react.FC = () => {
       const values = await form.validateFields();
       // 校验通过，获取表单值进行处理
       console.log("Validated values:", values, houseImagesFileList);
-      const parkImagesUrls = values?.parkImagesFileList?.map(
-        (item: any) => item?.response?.data?.url
+      const parkImagesUrls = values?.images?.map(
+        (item: any) => item?.response?.data?.url || item?.url
       );
-      const coverImageUrl = values?.coverImage?.map(
-        (item: any) => item?.response?.data?.url
+      const coverImageUrl = values?.thumbnail?.map(
+        (item: any) => item?.response?.data?.url || item?.url
       );
       const labels =
         values.label
           .split("，")
           .map((item: string) => item)
           ?.filter((item1: string) => !!item1) || [];
-
       const payload = {
         parkId: values?.parkId,
         address: values?.address,
@@ -231,9 +231,10 @@ const HouseManagement: react.FC = () => {
       const res = await addHouse(payload);
       const { code, data } = res;
       if (code === 200) {
-        message.success("添加项目成功");
+        message.success("添加房源成功");
         handleGetHouseList(currentPage);
         setIsAddOrEditHouseModalVisible(false);
+        form.resetFields();
       }
     } catch (errorInfo) {
       // 校验失败时的处理
@@ -432,7 +433,6 @@ const HouseManagement: react.FC = () => {
   const handleUploadHouseImagesChange: UploadProps["onChange"] = ({
     fileList: newFileList,
   }) => {
-    console.log("fdff", newFileList);
     setHouseImagesFileList(newFileList);
   };
 
@@ -632,7 +632,7 @@ const HouseManagement: react.FC = () => {
 
           <Form.Item
             label="详细信息"
-            name="introduce"
+            name="detail"
             rules={[{ required: false, message: "请选择招商顾问!" }]}
           >
             <TextArea />

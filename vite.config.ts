@@ -15,8 +15,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/adm': {
-        target: 'http://124.223.37.126:3005', // 测试环境的数据地址
-        // target: 'https://11v9336h60.goho.co', // 测试环境的数据地址
+        target: 'http://124.223.37.126:3005', 
+        // target: 'https://11v9336h60.goho.co', 
         changeOrigin: true
       }
     }

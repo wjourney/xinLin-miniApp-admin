@@ -118,6 +118,7 @@ const ProjectManagement: react.FC = () => {
         message.success("添加项目成功");
         handleGetProjectList(currentPage);
         setIsAddOrEditHouseModalVisible(false);
+        form.resetFields();
       }
     } catch (errorInfo) {
       // 校验失败时的处理
@@ -198,6 +199,7 @@ const ProjectManagement: react.FC = () => {
       if (code === 200) {
         message.success("添加项目成功");
         handleGetProjectList(currentPage);
+        form.resetFields();
       }
     } catch (errorInfo) {
       // 校验失败时的处理
