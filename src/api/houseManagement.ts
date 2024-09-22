@@ -1,91 +1,61 @@
 import serviceAxios from './axios';
 
-
 // 获取分页房源列表
-export const getImagesReviewList = ({
+export const getHouseList = ({
   pageNum = 1,
   pageSize = 10,
-  checkStatus,
-  modelName,
-  prompt,
-  platform,
-  userName,
-  isLike = 1
+
 }: any): Promise<any> => {
   return serviceAxios({
-    url: `/api/check/image/list`,
+    url: `/adm/houses`,
     method: 'get',
     params: {
-      pageNum,
-      pageSize,
-      checkStatus,
-      modelName,
-      prompt,
-      platform,
-      userName,
-      isLike
+      page: pageNum,
+      size: pageSize,
     }
+  });
+};
+
+
+// 设置为推荐
+export const setRecommendHouse = (id: number, recommend: number): Promise<any> => {
+  return serviceAxios({
+    url: `/adm/house/recommend/${id}?recommend=${recommend}`,
+    method: 'put',
   });
 };
 
 
 
 // 新增房源
-export const imageCheck = ({ id, checkStatus, platform }: any): Promise<any> => {
+export const addHouse = (body: any): Promise<any> => {
   return serviceAxios({
-    url: `/api/check/image/${id}`,
+    url: `/adm/house/add`,
     method: 'post',
-    data: {
-      checkStatus,
-      platform
-    }
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: body
   });
 };
 
 // 修改房源
-export const editImageTag = ({ imageId, tags, platform }: any): Promise<any> => {
+export const updateHouse = (id: any, body: any): Promise<any> => {
   return serviceAxios({
-    url: `/api/image/tag/${imageId}`,
-    method: 'post',
+    url: `/adm//house/update/${id}`,
+    method: 'put',
     headers: {
       'Content-Type': 'application/json'
     },
-    data: {
-      tags,
-      platform
-    }
+    data:body
   });
 };
 
 // 删除房源
-export const editModelTag = ({
-  modelId,
-  tags,
-  names,
-  platform
-}: any): Promise<any> => {
+export const deleteHouse = (id: any): Promise<any> => {
   return serviceAxios({
-    url: `/api/model/tag/${modelId}`,
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    data: {
-      tags,
-      names,
-      platform
-    }
-  });
-};
-
-// 设置为推荐
-export const pushToHomePage = ({ imageId, type, platform }: any): Promise<any> => {
-  return serviceAxios({
-    url: `/api/image/indexShow/${imageId}`,
-    method: 'post',
-    data: {
-      type,
-      platform
-    }
+    url: `/adm/house/${id}`,
+    method: 'delete',
+    // data: body
   });
 };

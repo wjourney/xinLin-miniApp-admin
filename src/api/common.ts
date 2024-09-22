@@ -1,8 +1,23 @@
 import serviceAxios from './axios';
 
-export const getHealthCheckInfo = () => {
+// 获取招商顾问列表
+export const getManager = (): Promise<any>=> {
   return serviceAxios({
-    url: `/api/common/healthCheck`,
+    url: `/adm/manager`,
     method: 'get'
   });
 };
+
+// 上传图片
+export const uploadImages = () => {
+  return serviceAxios({
+    url: `/adm/upload_image`,
+    method: 'post',
+  });
+ 
+} 
+
+
+export const getImgUrl = () => {
+
+}

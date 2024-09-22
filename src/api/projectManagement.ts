@@ -1,138 +1,69 @@
 import serviceAxios from './axios';
 
-export interface GetImagesReviewListParams {
-  pageNum?: number;
-  pageSize?: number;
-  checkStatus?: number;
-  modelName?: string;
-  prompt?: string;
-  userName?: string;
-  isLike?: number;
-  platform: string;
-}
 
-export interface ImageCheckBody {
-  id?: number;
-  checkStatus?: number;
-  platform: string;
-}
-
-export interface EditImageTagBody {
-  tags: number[];
-  imageId: number;
-  platform: string;
-}
-
-export interface EditModelTagBody {
-  tags?: number[];
-  names: string[];
-  modelId: number;
-  platform: string;
-}
-export interface PushToHomePageBody {
-  imageId: number;
-  type: number;
-  platform: string;
-}
-
-export const getImagesReviewList = ({
+// 项目列表
+export const getProjectsList = ({
   pageNum = 1,
   pageSize = 10,
-  checkStatus,
-  modelName,
-  prompt,
-  platform,
-  userName,
-  isLike = 1
-}: GetImagesReviewListParams): Promise<any> => {
+}: any): Promise<any> => {
   return serviceAxios({
-    url: `/api/check/image/list`,
+    url: `/adm/parks`,
     method: 'get',
     params: {
-      pageNum,
-      pageSize,
-      checkStatus,
-      modelName,
-      prompt,
-      platform,
-      userName,
-      isLike
+      page: pageNum,
+      size: pageSize,
     }
   });
 };
 
-export const imageCheck = ({ id, checkStatus, platform }: ImageCheckBody): Promise<any> => {
+
+// 获取所有项目列表
+export const getAllProjectsList = (): Promise<any> => {
   return serviceAxios({
-    url: `/api/check/image/${id}`,
-    method: 'post',
-    data: {
-      checkStatus,
-      platform
-    }
+    url: `/adm/park_options`,
+    method: 'get',
   });
 };
 
-//模型类型筛选
-// export interface ImodelNameFilterParam {
-//   id?: number;
-//   modelName?: number;
-//   platform: string;
-// };
-// export const modelNameFilter = ({ id, modelName, platform }: ImodelNameFilterParam): Promise<any> => {
-//   return serviceAxios({
-//     url: `/api/filter/model/${id}`,
-//     method: 'post',
-//     data: {
-//       modelName,
-//       platform
-//     }
-//   });
-// };
 
-// 图片标签修改
-export const editImageTag = ({ imageId, tags, platform }: EditImageTagBody): Promise<any> => {
+
+// 新增项目
+export const addProject = (body: any): Promise<any> => {
   return serviceAxios({
-    url: `/api/image/tag/${imageId}`,
+    url: `/adm/park/add`,
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
     },
-    data: {
-      tags,
-      platform
-    }
+    data: body
   });
 };
 
-// 模型标签修改
-export const editModelTag = ({
-  modelId,
-  tags,
-  names,
-  platform
-}: EditModelTagBody): Promise<any> => {
+
+// 设置为推荐
+export const setRecommendProject = (id: number, recommend: number): Promise<any> => {
   return serviceAxios({
-    url: `/api/model/tag/${modelId}`,
-    method: 'post',
+    url: `/adm/park/recommend/${id}?recommend=${recommend}`,
+    method: 'put',
+  });
+};
+
+// 修改项目
+export const updateProject = (id: any, body: any): Promise<any> => {
+  return serviceAxios({
+    url: `/adm/park/update/${id}`,
+    method: 'put',
     headers: {
       'Content-Type': 'application/json'
     },
-    data: {
-      tags,
-      names,
-      platform
-    }
+    data:body
   });
 };
 
-// 设置首页展示
-export const pushToHomePage = ({ imageId, type, platform }: PushToHomePageBody): Promise<any> => {
+// 删除项目
+export const deleteProject = (id: any): Promise<any> => {
   return serviceAxios({
-    url: `/api/image/indexShow/${imageId}`,
-    method: 'post',
-    data: {
-      type,
-      platform
-    }
+    url: `/adm/park/${id}`,
+    method: 'delete',
   });
 };

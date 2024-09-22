@@ -1,6 +1,13 @@
 import axios from 'axios';
 import { stringify } from 'qs';
 import { getCookie } from '@/helper/cookie';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 /*
   1. 对象序列化
     const obj = {
@@ -76,6 +83,8 @@ serviceAxios.interceptors.response.use(
           break;
         case 401:
           message = '您未登录，或者登录已经超时，请先登录！';
+          const currentUrl = window.location.href; // 获取当前的 URL
+          window.location.href = `/login?redirect=${encodeURIComponent(currentUrl)}`; // 将当前 URL 作为重定向参数传递
           break;
         case 403:
           message = '您没有权限操作！';

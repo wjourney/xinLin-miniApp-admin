@@ -1,5 +1,5 @@
-import React, { ReactNode, createContext, useEffect, useState } from 'react';
-import { getUserInfo } from '@/api/user';
+import React, { ReactNode, createContext, useEffect, useState } from "react";
+// import { getUserInfo } from '@/api/user';
 interface IUser {
   id: number;
   role: string;
@@ -18,15 +18,15 @@ export function useAuth() {
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<IUser>();
   const getUserData = async () => {
-    const { code, data = {} } = await getUserInfo();
-    if (code === 1000) {
-      setUser({
-        id: data?.id,
-        role: data?.role,
-        email: data?.email,
-        name: data?.name
-      });
-    }
+    // const { code, data = {} } = await getUserInfo();
+    // if (code === 1000) {
+    //   setUser({
+    //     id: data?.id,
+    //     role: data?.role,
+    //     email: data?.email,
+    //     name: data?.name
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -34,5 +34,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // 传递验证上下文(AuthContext)属性给嵌套的插槽children子组件(App)
-  return <AuthContext.Provider value={{ user, getUserData }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, getUserData }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

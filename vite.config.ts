@@ -19,7 +19,8 @@ export default defineConfig({
       //   changeOrigin: true
       // },
       '/adm': {
-        target: 'http://10.151.226.5:3005', // 测试环境的数据地址
+        target: 'http://124.223.37.126:3005', // 测试环境的数据地址
+        // target: 'https://11v9336h60.goho.co', // 测试环境的数据地址
         changeOrigin: true
       }
     }

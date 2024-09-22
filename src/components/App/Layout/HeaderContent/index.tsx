@@ -1,7 +1,7 @@
 import { Typography, message, Popover, Button, Row, Col } from "antd";
 import React, { Fragment } from "react";
 import { StyledAvater } from "@/components/App/Layout/HeaderContent/style";
-import { logout } from "@/api/user";
+// import { logout } from "@/api/user";
 import { removeCookie } from "@/helper/cookie";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/App/AuthProvider";
@@ -21,13 +21,13 @@ const HeaderContent: React.FC = () => {
   const { user } = auth;
 
   const handleLogout = async () => {
-    const { code, message: msg } = await logout();
-    if (code === 1000) {
-      removeCookie("Authorization");
-      navigate("/login");
-    } else {
-      message.error(msg);
-    }
+    // const { code, message: msg } = await logout();
+    // if (code === 1000) {
+    //   removeCookie("Authorization");
+    //   navigate("/login");
+    // } else {
+    //   message.error(msg);
+    // }
   };
 
   const PopoverContent = ({}) => {
