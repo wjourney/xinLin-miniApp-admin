@@ -336,7 +336,7 @@ const HouseManagement: react.FC = () => {
         record?.labels?.length === 0 || !record?.labels ? (
           "-"
         ) : (
-          <Space>
+          <Space direction="vertical">
             {record?.labels?.map((item: string) => (
               <Tag color="green">{item}</Tag>
             ))}
