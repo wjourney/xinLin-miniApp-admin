@@ -318,7 +318,7 @@ const HouseManagement: react.FC = () => {
       width: 80,
     },
     {
-      title: "标准层层高",
+      title: "标签",
       dataIndex: "labels",
       width: 80,
       render: (_: any, record: any) =>
