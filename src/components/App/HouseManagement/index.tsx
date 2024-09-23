@@ -412,6 +412,7 @@ const HouseManagement: react.FC = () => {
                 ...record,
                 images: formattedImagesFileList,
                 managers: record?.managers?.[0]?.id,
+                labels: record?.labels?.join("，"),
                 thumbnail: [
                   {
                     uid: `-1`, // 每个文件需要唯一的 uid
