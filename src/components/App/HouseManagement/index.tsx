@@ -151,7 +151,7 @@ const HouseManagement: react.FC = () => {
         (item: any) => item?.response?.data?.url || item?.url
       );
       const labels =
-        values.label
+        values.labels
           .split("，")
           .map((item: string) => item)
           ?.filter((item1: string) => !!item1) || [];
@@ -203,7 +203,7 @@ const HouseManagement: react.FC = () => {
         (item: any) => item?.response?.data?.url || item?.url
       );
       const labels =
-        values.label
+        values.labels
           .split("，")
           .map((item: string) => item)
           ?.filter((item1: string) => !!item1) || [];
@@ -627,7 +627,7 @@ const HouseManagement: react.FC = () => {
           </Form.Item> */}
           <Form.Item
             label="标签"
-            name="label"
+            name="labels"
             rules={[
               { required: true, message: "请输入标签(逗号作为标签分割符)" },
               { validator: validateCommaSeparatedNumbers },
