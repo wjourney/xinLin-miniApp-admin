@@ -3,7 +3,7 @@ import serviceAxios from './axios';
 // 获取招商顾问列表
 export const getManager = (): Promise<any>=> {
   return serviceAxios({
-    url: `/adm/manager`,
+    url: `/adm/managers`,
     method: 'get'
   });
 };

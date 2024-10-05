@@ -40,6 +40,49 @@ const menuList: IMunuList[] = [
     label: "项目信息管理",
     role: ["admin"],
   },
+  {
+    key: "/news",
+    icon: <DotChartOutlined />,
+    label: "资讯管理",
+    role: ["admin"],
+  },
+  {
+    key: "/managers",
+    icon: <DotChartOutlined />,
+    label: "招商顾问管理",
+    role: ["admin"],
+  },
+  {
+    key: "/reserve",
+    icon: <DotChartOutlined />,
+    label: "预约管理",
+    role: ["admin"],
+  },
+  {
+    key: "/message",
+    icon: <DotChartOutlined />,
+    label: "消息管理",
+    role: ["admin"],
+  },
+  // {
+  //   key: "/collections",
+  //   icon: <DotChartOutlined />,
+  //   label: "收藏管理",
+  //   role: ["admin"],
+  // },
+  {
+    key: "/miniAppUser",
+    icon: <DotChartOutlined />,
+    label: "小程序用户管理",
+    role: ["admin"],
+  },
+
+  {
+    key: "/adminUser",
+    icon: <DotChartOutlined />,
+    label: "后台用户管理",
+    role: ["admin"],
+  },
 ];
 
 const SiderMenu: React.FC = () => {

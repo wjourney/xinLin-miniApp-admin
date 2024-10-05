@@ -88,7 +88,7 @@ const HouseManagement: react.FC = () => {
     });
     const { code, data } = res;
     if (code === 200) {
-      setListData(data?.data);
+      setListData(data?.list);
       setTotal(data?.total);
     }
   };
@@ -99,7 +99,7 @@ const HouseManagement: react.FC = () => {
     const { code, data } = res;
     if (code === 200) {
       setManagerData(
-        data?.map((item: any) => ({
+        data?.list?.map((item: any) => ({
           label: item?.name,
           value: item?.id,
         }))
@@ -331,7 +331,7 @@ const HouseManagement: react.FC = () => {
     {
       title: "标签",
       dataIndex: "labels",
-      width: 80,
+      width: 200,
       render: (_: any, record: any) =>
         record?.labels?.length === 0 || !record?.labels ? (
           "-"
@@ -466,7 +466,7 @@ const HouseManagement: react.FC = () => {
       return Promise.resolve(); // 如果没有输入内容，则不进行验证
     }
 
-    const regex = /^([^,]+(,[^,]+)*)?$/; // 匹配用逗号分隔的数字
+    const regex = /^([^,]+(,[^,]+)*)?$/;
     if (!regex.test(value)) {
       return Promise.reject(new Error("请输入有效的标签(逗号分隔)"));
     }
@@ -634,7 +634,7 @@ const HouseManagement: react.FC = () => {
             ]}
             validateFirst
           >
-            <Input placeholder="" />
+            <Input placeholder="请输入标签(请用逗号作为标签分割符)" />
           </Form.Item>
           <Form.Item
             label="招商顾问"
