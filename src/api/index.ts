@@ -20,7 +20,7 @@ export const getReserveList = ({
 export const updateReserveStatus = (id: number,status: number): Promise<any> => {
   return serviceAxios({
     url: `/adm/reservation/state/${id}?confirm=${status}`,
-    method: 'update',
+    method: 'put',
   });
 };
 
@@ -179,6 +179,21 @@ export const getMiniAppUserList = ({
 }: any): Promise<any> => {
   return serviceAxios({
     url: `/adm/users`,
+    method: 'get',
+    params: {
+      page: pageNum,
+      size: pageSize,
+    }
+  });
+};
+
+// 消息管理
+export const getMessageList = ({
+  pageNum = 1,
+  pageSize = 10,
+}: any): Promise<any> => {
+  return serviceAxios({
+    url: `/adm/messages`,
     method: 'get',
     params: {
       page: pageNum,

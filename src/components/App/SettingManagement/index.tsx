@@ -1,17 +1,12 @@
 import react, { Fragment, useState, useEffect } from "react";
 import {
-  Radio,
   Input,
   Space,
-  Popover,
   Button,
   Row,
   Col,
-  Divider,
-  Checkbox,
   Form,
   message,
-  RadioChangeEvent,
   Table,
   Select,
   Modal,
@@ -29,37 +24,12 @@ import {
 } from "@/api/houseManagement";
 import "./index.scss";
 import TextArea from "antd/es/input/TextArea";
-import {
-  ExclamationCircleOutlined,
-  PlusOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { ExclamationCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
-import { getManager } from "@/api/common";
 import { addHouse } from "@/api/houseManagement";
-import {
-  getAllProjectsList,
-  addProject,
-  updateProject,
-} from "@/api/projectManagement";
+import { getMessageList } from "@/api/index";
 
-const { Search } = Input;
 const { confirm } = Modal;
-
-const businessOptions = [
-  {
-    label: "商住",
-    value: "SZ",
-  },
-  {
-    label: "办公",
-    value: "BG",
-  },
-  {
-    label: "商业",
-    value: "SY",
-  },
-];
 
 const HouseManagement: react.FC = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -81,31 +51,16 @@ const HouseManagement: react.FC = () => {
   const [allProjectOptions, setAllProjectOptions] = useState([]);
   const [selectEditHouse, setSelectEditHouse] = useState(0);
 
-  const handleGetHouseList = async (currentPage: number) => {
-    const res = await getHouseList({
+  const handleGetMessageList = async (currentPage: number) => {
+    const res = await getMessageList({
       pageNum: currentPage,
       pageSize: 10,
     });
     const { code, data } = res;
     if (code === 200) {
-      setListData(data?.list);
+      setListData(data?.data);
       setTotal(data?.total);
     }
-  };
-
-  const getManagerData = async () => {
-    setLoading(true);
-    const res = await getManager();
-    const { code, data } = res;
-    if (code === 200) {
-      setManagerData(
-        data?.list?.map((item: any) => ({
-          label: item?.name,
-          value: item?.id,
-        }))
-      );
-    }
-    setLoading(false);
   };
 
   const handleDeleteHouse = async (record: any) => {
@@ -124,20 +79,15 @@ const HouseManagement: react.FC = () => {
     const res = await deleteHouse(id);
     const { code, data } = res || {};
     if (code === 200) {
-      handleGetHouseList(currentPage);
+      handleGetMessageList(currentPage);
     } else {
       message.error("删除失败");
     }
   };
 
   useEffect(() => {
-    handleGetHouseList(currentPage);
+    handleGetMessageList(currentPage);
   }, [currentPage]);
-
-  useEffect(() => {
-    getManagerData();
-    handleGetAllProject();
-  }, []);
 
   const handleEditHouse = async (id: number) => {
     try {
@@ -180,7 +130,7 @@ const HouseManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("修改房源成功");
-        handleGetHouseList(currentPage);
+        handleGetMessageList(currentPage);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
@@ -232,7 +182,7 @@ const HouseManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("添加房源成功");
-        handleGetHouseList(currentPage);
+        handleGetMessageList(currentPage);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
@@ -242,24 +192,11 @@ const HouseManagement: react.FC = () => {
     }
   };
 
-  const handleGetAllProject = async () => {
-    const res = await getAllProjectsList();
-    const { code, data } = res;
-    if (code === 200) {
-      setAllProjectOptions(
-        data?.map((item: any) => ({
-          label: item?.parkName,
-          value: item?.id,
-        }))
-      );
-    }
-  };
-
   const handleSetRecommend = async (id: number, recommend: number) => {
     const res = await setRecommendHouse(id, recommend);
     const { code, data } = res;
     if (code === 200) {
-      handleGetHouseList(currentPage);
+      handleGetMessageList(currentPage);
       message.success(recommend === 0 ? "取消推荐成功" : "设置推荐成功");
     } else {
       message.success(recommend === 0 ? "取消推荐失败" : "设置推荐失败");
@@ -273,30 +210,20 @@ const HouseManagement: react.FC = () => {
       width: 100,
     },
     {
-      title: "城市",
-      dataIndex: "city",
-      width: 100,
-    },
-    {
-      title: "区域",
-      dataIndex: "districtName",
-      width: 100,
-    },
-    {
-      title: "所属园区",
-      dataIndex: "parkName",
-      width: 200,
-    },
-    {
       title: "详细地址",
       dataIndex: "address",
+      render: (_, record: any) => (
+        <div>
+          {record?.city}
+          {record?.address}
+        </div>
+      ),
       width: 200,
     },
     {
       title: "面积",
       dataIndex: "totalArea",
       width: 80,
-      render: (value) => <div>{value}㎡</div>,
     },
     {
       title: "所在楼层",
@@ -319,6 +246,11 @@ const HouseManagement: react.FC = () => {
       width: 80,
     },
     {
+      title: "所属项目",
+      dataIndex: "parkName",
+      width: 200,
+    },
+    {
       title: "标准层层高",
       dataIndex: "floorHeight",
       width: 80,
@@ -329,26 +261,14 @@ const HouseManagement: react.FC = () => {
       width: 200,
       render: (_: any, record: any) => (
         <Space direction="vertical">
-          {record?.managers?.map((item: any) => (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 4,
-              }}
-            >
-              <div>{item?.name}</div>
-              <Image style={{ height: 80, width: 80 }} src={item?.thumb} />
-            </div>
-          ))}
+          {record?.managers?.map((item: any) => <div>{item?.name}</div>)}
         </Space>
       ),
     },
     {
       title: "标签",
       dataIndex: "labels",
-      width: 200,
+      width: 80,
       render: (_: any, record: any) =>
         record?.labels?.length === 0 || !record?.labels ? (
           "-"
@@ -364,14 +284,6 @@ const HouseManagement: react.FC = () => {
       title: "时间",
       dataIndex: "createdAt",
       width: 150,
-      render: (value) => (
-        <div>
-          {new Date(value)
-            .toLocaleString("zh-CN", { hour12: false })
-            .replace(/\//g, "-")
-            .slice(0, -3)}
-        </div>
-      ),
     },
     {
       title: "房源图片",
@@ -491,7 +403,7 @@ const HouseManagement: react.FC = () => {
       return Promise.resolve(); // 如果没有输入内容，则不进行验证
     }
 
-    const regex = /^([^,]+(,[^,]+)*)?$/;
+    const regex = /^([^,]+(,[^,]+)*)?$/; // 匹配用逗号分隔的数字
     if (!regex.test(value)) {
       return Promise.reject(new Error("请输入有效的标签(逗号分隔)"));
     }
@@ -538,10 +450,7 @@ const HouseManagement: react.FC = () => {
 
       <Modal
         open={isAddOrEditHouseModalVisible}
-        onCancel={() => {
-          setIsAddOrEditHouseModalVisible(false);
-          form.resetFields();
-        }}
+        onCancel={() => setIsAddOrEditHouseModalVisible(false)}
         title={modalType == 1 ? "新增房源" : "修改房源"}
         width={1024}
         okText="确认"
@@ -573,30 +482,6 @@ const HouseManagement: react.FC = () => {
             rules={[{ required: true, message: "请输入城市！" }]}
           >
             <Input />
-          </Form.Item>
-          {/* <Form.Item
-            label="区域"
-            name="districtName"
-            rules={[{ required: true, message: "请输入区域！" }]}
-            validateFirst
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="详细地址"
-            name="address"
-            rules={[{ required: true, message: "请输入详细地址！" }]}
-            validateFirst
-          >
-            <Input />
-          </Form.Item> */}
-          <Form.Item
-            label="业态"
-            name="businessType"
-            rules={[{ required: true, message: "请选择业态！" }]}
-            validateFirst
-          >
-            <Select options={businessOptions} />
           </Form.Item>
           <Form.Item
             label="装修水平"

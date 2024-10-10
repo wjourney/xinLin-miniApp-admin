@@ -209,7 +209,10 @@ const HouseManagement: react.FC = () => {
 
       <Modal
         open={isAddOrEditHouseModalVisible}
-        onCancel={() => setIsAddOrEditHouseModalVisible(false)}
+        onCancel={() => {
+          setIsAddOrEditHouseModalVisible(false);
+          form.resetFields();
+        }}
         title={modalType == 1 ? "新增后台管理用户" : "修改后台管理用户"}
         width={1024}
         okText="确认"

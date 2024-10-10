@@ -29,6 +29,9 @@ const AdminUserManagement = React.lazy(
 const ManagersManagement = React.lazy(
   () => import("@/components/App/ManagersManagement")
 );
+const SettingManagement = React.lazy(
+  () => import("@/components/App/SettingManagement")
+);
 
 const routes: RouteObject[] = [
   {
@@ -71,6 +74,10 @@ const routes: RouteObject[] = [
     path: "/adminUser",
     element: <AdminUserManagement />,
   },
+  // {
+  //   path: "/setting",
+  //   element: <SettingManagement />,
+  // },
 ];
 
 export default routes;

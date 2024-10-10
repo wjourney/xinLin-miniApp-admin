@@ -111,6 +111,8 @@ const ProjectManagement: react.FC = () => {
         totalArea: values?.totalArea,
         totalFloor: values?.totalFloor,
         isRecommend: !!values?.isRecommend,
+        city: values?.city,
+        districtName: values?.districtName,
       };
 
       const res = await updateProject(id, payload);
@@ -232,8 +234,18 @@ const ProjectManagement: react.FC = () => {
       width: 100,
     },
     {
-      title: "项目名",
+      title: "园区名",
       dataIndex: "parkName",
+      width: 200,
+    },
+    {
+      title: "城市",
+      dataIndex: "city",
+      width: 200,
+    },
+    {
+      title: "区域",
+      dataIndex: "districtName",
       width: 200,
     },
     {
@@ -252,19 +264,9 @@ const ProjectManagement: react.FC = () => {
       width: 80,
     },
     {
-      title: "介绍",
-      dataIndex: "introduce",
-      width: 200,
-    },
-    {
-      title: "招商顾问",
-      dataIndex: "managers",
-      width: 200,
-      render: (_: any, record: any) => (
-        <Space direction="vertical">
-          {record?.managers?.map((item: any) => <div>{item?.name}</div>)}
-        </Space>
-      ),
+      title: "公司",
+      dataIndex: "company",
+      width: 80,
     },
     {
       title: "楼层数",
@@ -277,9 +279,55 @@ const ProjectManagement: react.FC = () => {
       width: 80,
     },
     {
+      title: "总面积",
+      dataIndex: "totalArea",
+      width: 80,
+      render: (value) => <div>{value}㎡</div>,
+    },
+    {
+      title: "房源数",
+      dataIndex: "totalHouse",
+      width: 80,
+    },
+    {
+      title: "招商顾问",
+      dataIndex: "managers",
+      width: 200,
+      render: (_: any, record: any) => (
+        <Space direction="vertical">
+          {record?.managers?.map((item: any) => (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 4,
+              }}
+            >
+              <div>{item?.name}</div>
+              <Image style={{ height: 80, width: 80 }} src={item?.thumb} />
+            </div>
+          ))}
+        </Space>
+      ),
+    },
+    {
+      title: "介绍",
+      dataIndex: "introduce",
+      width: 200,
+    },
+    {
       title: "时间",
       dataIndex: "createdAt",
-      width: 80,
+      width: 100,
+      render: (value) => (
+        <div>
+          {new Date(value)
+            .toLocaleString("zh-CN", { hour12: false })
+            .replace(/\//g, "-")
+            .slice(0, -3)}
+        </div>
+      ),
     },
     {
       title: "园区图片",
@@ -408,7 +456,10 @@ const ProjectManagement: react.FC = () => {
       />
       <Modal
         open={isAddOrEditHouseModalVisible}
-        onCancel={() => setIsAddOrEditHouseModalVisible(false)}
+        onCancel={() => {
+          setIsAddOrEditHouseModalVisible(false);
+          form.resetFields();
+        }}
         title={modalType == 1 ? "新增项目" : "修改项目"}
         width={1024}
         okText="确认"
@@ -434,7 +485,23 @@ const ProjectManagement: react.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="地址"
+            label="城市"
+            name="city"
+            rules={[{ required: true, message: "请输入地址！" }]}
+            validateFirst
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="区"
+            name="districtName"
+            rules={[{ required: true, message: "请输入地址！" }]}
+            validateFirst
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="详细地址"
             name="address"
             rules={[{ required: true, message: "请输入地址！" }]}
             validateFirst

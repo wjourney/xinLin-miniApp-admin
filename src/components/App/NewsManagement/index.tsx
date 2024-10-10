@@ -154,17 +154,6 @@ const HouseManagement: react.FC = () => {
     }
   };
 
-  // const handleSetRecommend = async (id: number, recommend: number) => {
-  //   const res = await setRecommendHouse(id, recommend);
-  //   const { code, data } = res;
-  //   if (code === 200) {
-  //     handleGetNews(currentPage);
-  //     message.success(recommend === 0 ? "取消推荐成功" : "设置推荐成功");
-  //   } else {
-  //     message.success(recommend === 0 ? "取消推荐失败" : "设置推荐失败");
-  //   }
-  // };
-
   const column = [
     {
       title: "ID",
@@ -322,7 +311,10 @@ const HouseManagement: react.FC = () => {
       </div>
       <Modal
         open={isAddOrEditHouseModalVisible}
-        onCancel={() => setIsAddOrEditNewsModalVisible(false)}
+        onCancel={() => {
+          setIsAddOrEditNewsModalVisible(false);
+          form.resetFields();
+        }}
         title={modalType == 1 ? "新增新闻" : "修改新闻"}
         width={1024}
         okText="确认"

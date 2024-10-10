@@ -87,9 +87,10 @@ const HouseManagement: react.FC = () => {
   }, [currentPage]);
 
   const handleSwitchReserveStatus = async (id: number, status: number) => {
-    const res = updateReserveStatus(id, status);
+    const res = await updateReserveStatus(id, status);
     const { code } = res;
     if (code === 200) {
+      handleGetReserveList(currentPage);
     }
   };
 
@@ -121,8 +122,8 @@ const HouseManagement: react.FC = () => {
       width: 200,
     },
     {
-      title: "联系电话",
-      dataIndex: "phone",
+      title: "预约人联系电话",
+      dataIndex: "contact",
       width: 100,
     },
     {
@@ -137,6 +138,11 @@ const HouseManagement: react.FC = () => {
       render: (value: number) => <div>{ReserveType?.[value]?.text}</div>,
     },
     {
+      title: "招商顾问联系电话",
+      dataIndex: "managerPhone",
+      width: 100,
+    },
+    {
       title: "招商顾问",
       dataIndex: "manager",
       width: 100,
@@ -149,24 +155,28 @@ const HouseManagement: react.FC = () => {
           <Button
             type="link"
             onClick={() => handleSwitchReserveStatus(record?.id, 0)}
+            disabled={record?.confirm === 0}
           >
-            设置为未确认
+            设置为待确认
           </Button>
           <Button
             type="link"
             onClick={() => handleSwitchReserveStatus(record?.id, 1)}
+            disabled={record?.confirm === 1}
           >
             设置为已确认
           </Button>
           <Button
             type="link"
             onClick={() => handleSwitchReserveStatus(record?.id, 2)}
+            disabled={record?.confirm === 2}
           >
             设置为已看房
           </Button>
           <Button
             type="link"
             onClick={() => handleSwitchReserveStatus(record?.id, 3)}
+            disabled={record?.confirm === 3}
           >
             取消这个预定
           </Button>

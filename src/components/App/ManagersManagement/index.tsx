@@ -264,7 +264,10 @@ const HouseManagement: react.FC = () => {
 
       <Modal
         open={isAddOrEditManagerModalVisible}
-        onCancel={() => setIsAddOrEditManagerModalVisible(false)}
+        onCancel={() => {
+          setIsAddOrEditManagerModalVisible(false);
+          form.resetFields();
+        }}
         title={modalType == 1 ? "新增招商顾问" : "修改招商顾问"}
         width={1024}
         okText="确认"
