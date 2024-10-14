@@ -153,7 +153,7 @@ const HouseManagement: react.FC = () => {
               setIsAddOrEditHouseModalVisible(true);
               setSelectEditHouse(record?.id);
               form.setFieldsValue({
-                account: record,
+                account: record.account,
                 nickname: record?.nickname,
               });
             }}
