@@ -114,6 +114,7 @@ const ProjectManagement: react.FC = () => {
         isRecommend: !!values?.isRecommend,
         city: values?.city,
         districtName: values?.districtName,
+        price: values?.price,
       };
 
       const res = await updateProject(id, payload);
@@ -197,6 +198,7 @@ const ProjectManagement: react.FC = () => {
         totalArea: values?.totalArea,
         totalFloor: values?.totalFloor,
         isRecommend: !!values?.isRecommend,
+        price: values?.price,
       };
       const res = await addProject(payload);
       const { code, data } = res;
@@ -284,6 +286,11 @@ const ProjectManagement: react.FC = () => {
       width: 80,
     },
     {
+      title: "价格范围",
+      dataIndex: "price",
+      width: 80,
+    },
+    {
       title: "总面积",
       dataIndex: "totalArea",
       width: 80,
@@ -322,7 +329,7 @@ const ProjectManagement: react.FC = () => {
       width: 200,
     },
     {
-      title: "时间",
+      title: " 创建时间",
       dataIndex: "createdAt",
       width: 100,
       render: (value) => (
@@ -432,7 +439,7 @@ const ProjectManagement: react.FC = () => {
       <Row gutter={16}>
         <Col className="gutter-row" span={6}>
           <Search
-            placeholder="请输入区域和详细地址进行搜索"
+            placeholder="请输入园区名进行搜索"
             // style={{ width: "20rem" }}
             onSearch={(value) => handelGetSearchValue(value)}
             enterButton
@@ -471,7 +478,7 @@ const ProjectManagement: react.FC = () => {
           form.resetFields();
         }}
         title={modalType == 1 ? "新增项目" : "修改项目"}
-        width={1024}
+        width={1300}
         okText="确认"
         cancelText="取消"
         onOk={
@@ -564,6 +571,24 @@ const ProjectManagement: react.FC = () => {
             rules={[{ required: true, message: "请输入标准层层高!" }]}
           >
             <InputNumber />
+          </Form.Item>
+          <Form.Item
+            label="价格范围"
+            name="price"
+            rules={[
+              {
+                required: true,
+                message: "请输入价格范围！",
+              },
+              {
+                pattern: /^\d+(\.\d+)?(-\d+(\.\d+)?)?$/,
+                message:
+                  "请请输入正确的价格范围，输入用-符号分隔的字符串，比如1.5-3.5，或者输入一个纯数字输入正确的价格范围",
+              },
+            ]}
+            validateFirst
+          >
+            <Input placeholder="请请输入正确的价格范围，输入用-符号分隔的字符串，比如1.5-3.5，或者输入一个纯数字输入正确的价格范围" />
           </Form.Item>
           {/* <Form.Item
             label="标签"

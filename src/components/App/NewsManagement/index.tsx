@@ -44,7 +44,7 @@ const HouseManagement: react.FC = () => {
   //   []
   // );
   const [coverImageFileList, setCoverImageFileList] = useState<UploadFile[]>(
-    []
+    [],
   );
   const [managerData, setManagerData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -98,7 +98,7 @@ const HouseManagement: react.FC = () => {
       // 校验通过，获取表单值进行处理
 
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
 
       const payload = {
@@ -131,7 +131,7 @@ const HouseManagement: react.FC = () => {
       //   (item: any) => item?.response?.data?.url || item?.url
       // );
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
 
       const payload = {
@@ -190,6 +190,14 @@ const HouseManagement: react.FC = () => {
       title: "时间",
       dataIndex: "updatedAt",
       width: 100,
+      render: (value, record) => (
+        <div>
+          {new Date(value)
+            .toLocaleString("zh-CN", { hour12: false })
+            .replace(/\//g, "-")
+            .slice(0, -3)}
+        </div>
+      ),
     },
     {
       title: "操作",

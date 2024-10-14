@@ -371,7 +371,7 @@ const HouseManagement: react.FC = () => {
         ),
     },
     {
-      title: "时间",
+      title: "创建时间",
       dataIndex: "createdAt",
       width: 150,
       render: (value) => (
@@ -605,14 +605,14 @@ const HouseManagement: react.FC = () => {
           >
             <Input />
           </Form.Item> */}
-          <Form.Item
+          {/* <Form.Item
             label="业态"
             name="businessType"
             rules={[{ required: true, message: "请选择业态！" }]}
             validateFirst
           >
             <Select options={businessOptions} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="装修水平"
             name="zhxiu"

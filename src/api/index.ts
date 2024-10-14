@@ -5,6 +5,7 @@ import serviceAxios from './axios';
 export const getReserveList = ({
   pageNum = 1,
   pageSize = 10,
+  search
 }: any): Promise<any> => {
   return serviceAxios({
     url: `/adm/reservations`,
@@ -12,6 +13,7 @@ export const getReserveList = ({
     params: {
       page: pageNum,
       size: pageSize,
+      search
     }
   });
 };
@@ -201,3 +203,28 @@ export const getMessageList = ({
     }
   });
 };
+
+
+// 注销小程序用户
+export const deleteMiniAppUser= (id: any): Promise<any> => {
+  return serviceAxios({
+    url: ` /adm/users/${id}`,
+    method: 'delete',
+  });
+  };
+  
+
+// 审核修改用户信息
+// adm/audit_user
+export const checkUpdateMiniAppUserInfo= (userId: string, id: any, status: string): Promise<any> => {
+  return serviceAxios({
+    url: `/adm/audit_user`,
+    method: 'put',
+    data: {
+      id,
+      userId,
+      status
+    }
+  });
+  };
+  

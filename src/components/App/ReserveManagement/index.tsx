@@ -68,11 +68,15 @@ const HouseManagement: react.FC = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const handleGetReserveList = async (currentPage: number) => {
+  const handleGetReserveList = async (
+    currentPage: number,
+    searchValue: string,
+  ) => {
     setLoading(true);
     const res = await getReserveList({
       pageNum: currentPage,
       pageSize: 10,
+      search: searchValue,
     });
     const { code, data } = res;
     if (code === 200) {
@@ -83,15 +87,21 @@ const HouseManagement: react.FC = () => {
   };
 
   useEffect(() => {
-    handleGetReserveList(currentPage);
+    handleGetReserveList(currentPage, searchValue);
   }, [currentPage]);
 
   const handleSwitchReserveStatus = async (id: number, status: number) => {
     const res = await updateReserveStatus(id, status);
     const { code } = res;
     if (code === 200) {
-      handleGetReserveList(currentPage);
+      handleGetReserveList(currentPage, searchValue);
     }
+  };
+
+  const handelGetSearchValue = (value: string) => {
+    setSearchValue(value);
+    setCurrentPage(1);
+    handleGetReserveList(currentPage, value);
   };
 
   const column = [
@@ -122,6 +132,11 @@ const HouseManagement: react.FC = () => {
       width: 200,
     },
     {
+      title: "预约人姓名",
+      dataIndex: "username",
+      width: 100,
+    },
+    {
       title: "预约人联系电话",
       dataIndex: "contact",
       width: 100,
@@ -130,6 +145,14 @@ const HouseManagement: react.FC = () => {
       title: "预约时间",
       dataIndex: "reservTime",
       width: 100,
+      render: (value, record) => (
+        <div>
+          {new Date(value)
+            .toLocaleString("zh-CN", { hour12: false })
+            .replace(/\//g, "-")
+            .slice(0, -3)}
+        </div>
+      ),
     },
     {
       title: "预约状态",
@@ -190,9 +213,14 @@ const HouseManagement: react.FC = () => {
   return (
     <div>
       <Row gutter={16}>
-        {/* <Col className="gutter-row" span={6}>
-          <Search />
-        </Col> */}
+        <Col className="gutter-row" span={6}>
+          <Search
+            placeholder="请输入预约人姓名或电话进行搜索"
+            // style={{ width: "20rem" }}
+            onSearch={(value) => handelGetSearchValue(value)}
+            enterButton
+          />
+        </Col>
       </Row>
       <div style={{ width: "100%", overflowX: "auto" }}>
         <Table

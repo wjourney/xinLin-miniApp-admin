@@ -1,5 +1,15 @@
 import react, { Fragment, useState, useEffect } from "react";
-import { Radio, Input, Button, Row, message, Table, Modal, Image } from "antd";
+import {
+  Radio,
+  Input,
+  Button,
+  Row,
+  message,
+  Table,
+  Modal,
+  Image,
+  Space,
+} from "antd";
 import { deleteHouse } from "@/api/houseManagement";
 import "./index.scss";
 import {
@@ -7,7 +17,11 @@ import {
   PlusOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { getMiniAppUserList } from "@/api/index";
+import {
+  getMiniAppUserList,
+  deleteMiniAppUser,
+  checkUpdateMiniAppUserInfo,
+} from "@/api/index";
 
 const { Search } = Input;
 const { confirm } = Modal;
@@ -19,7 +33,7 @@ const HouseManagement: react.FC = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const handleGetHouseList = async (currentPage: number) => {
+  const handleGetMiniAppUSerList = async (currentPage: number) => {
     setLoading(true);
     const res = await getMiniAppUserList({
       pageNum: currentPage,
@@ -38,26 +52,40 @@ const HouseManagement: react.FC = () => {
       icon: <ExclamationCircleOutlined />,
       content: `确定删除${record?.username}用户吗`,
       onOk() {
-        handleConfirmDeleteHouse(record?.id);
+        handleConfirmMiniAppUser(record?.id);
       },
       okText: "确认",
       cancelText: "取消",
     });
   };
 
-  const handleConfirmDeleteHouse = async (id: number) => {
-    const res = await deleteHouse(id);
+  const handleConfirmMiniAppUser = async (id: number) => {
+    const res = await deleteMiniAppUser(id);
     const { code, data } = res || {};
     if (code === 200) {
-      handleGetHouseList(currentPage);
+      handleGetMiniAppUSerList(currentPage);
     } else {
       message.error("删除失败");
     }
   };
 
   useEffect(() => {
-    handleGetHouseList(currentPage);
+    handleGetMiniAppUSerList(currentPage);
   }, [currentPage]);
+
+  // 审核用户信息修改接口
+  const handleCheck = async (record: any, status: any) => {
+    const res = await checkUpdateMiniAppUserInfo(
+      record?.id,
+      record?.userUpdates?.[0]?.id,
+      status,
+    );
+    const { code } = res;
+    if (code === 200) {
+      message.success("审核成功");
+      handleGetMiniAppUSerList(currentPage);
+    }
+  };
 
   const column = [
     {
@@ -65,12 +93,12 @@ const HouseManagement: react.FC = () => {
       dataIndex: "id",
     },
     {
-      title: "用户名",
-      dataIndex: "username",
-    },
-    {
       title: "电话",
       dataIndex: "phone",
+    },
+    {
+      title: "用户名",
+      dataIndex: "username",
     },
     {
       title: "头像",
@@ -78,18 +106,53 @@ const HouseManagement: react.FC = () => {
       render: (_: any, record: any) => (
         <Image
           style={{ width: 150, height: 150, objectFit: "cover" }}
-          src={record?.thumbnail}
+          src={record?.avatar}
         />
       ),
+      width: 200,
+    },
+    {
+      title: "修改的用户名",
+      dataIndex: "username",
+      render: (_, record) => (
+        <div>{record?.userUpdates?.[0]?.newValue?.username}</div>
+      ),
+    },
+    {
+      title: "修改的头像",
+      dataIndex: "avatar",
+      render: (_: any, record: any) =>
+        !!record?.userUpdates?.[0]?.newValue?.avatar ? (
+          <Image
+            style={{ width: 150, height: 150, objectFit: "cover" }}
+            src={record?.userUpdates?.[0]?.newValue?.avatar}
+          />
+        ) : null,
       width: 200,
     },
     {
       title: "操作",
       dataIndex: "operation",
       render: (_: any, record: any) => (
-        <Button type="link" onClick={() => handleDeleteUser(record)}>
-          注销
-        </Button>
+        <Space direction="vertical">
+          <Button
+            disabled={record?.userUpdates?.[0]?.status !== 0}
+            type="link"
+            onClick={() => handleCheck(record, 2)}
+          >
+            审核不通过
+          </Button>
+          <Button
+            disabled={record?.userUpdates?.[0]?.status !== 0}
+            type="link"
+            onClick={() => handleCheck(record, 1)}
+          >
+            审核通过
+          </Button>
+          <Button type="link" onClick={() => handleDeleteUser(record)}>
+            注销该用户
+          </Button>
+        </Space>
       ),
       width: 100,
       fixed: "right", // 固定操作列在右侧

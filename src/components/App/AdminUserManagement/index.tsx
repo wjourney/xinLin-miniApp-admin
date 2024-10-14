@@ -136,6 +136,14 @@ const HouseManagement: react.FC = () => {
     {
       title: "时间",
       dataIndex: "updatedAt",
+      render: (value, record) => (
+        <div>
+          {new Date(value)
+            .toLocaleString("zh-CN", { hour12: false })
+            .replace(/\//g, "-")
+            .slice(0, -3)}
+        </div>
+      ),
     },
     {
       title: "账户名",
