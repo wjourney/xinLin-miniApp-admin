@@ -69,10 +69,10 @@ const HouseManagement: react.FC = () => {
   const [listData, setListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // 当前页码
   const [houseImagesFileList, setHouseImagesFileList] = useState<UploadFile[]>(
-    []
+    [],
   );
   const [coverImageFileList, setCoverImageFileList] = useState<UploadFile[]>(
-    []
+    [],
   );
   const [managerData, setManagerData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -81,10 +81,14 @@ const HouseManagement: react.FC = () => {
   const [allProjectOptions, setAllProjectOptions] = useState([]);
   const [selectEditHouse, setSelectEditHouse] = useState(0);
 
-  const handleGetHouseList = async (currentPage: number) => {
+  const handleGetHouseList = async (
+    currentPage: number,
+    searchValue: string,
+  ) => {
     const res = await getHouseList({
       pageNum: currentPage,
       pageSize: 10,
+      search: searchValue,
     });
     const { code, data } = res;
     if (code === 200) {
@@ -102,7 +106,7 @@ const HouseManagement: react.FC = () => {
         data?.list?.map((item: any) => ({
           label: item?.name,
           value: item?.id,
-        }))
+        })),
       );
     }
     setLoading(false);
@@ -124,14 +128,14 @@ const HouseManagement: react.FC = () => {
     const res = await deleteHouse(id);
     const { code, data } = res || {};
     if (code === 200) {
-      handleGetHouseList(currentPage);
+      handleGetHouseList(currentPage, searchValue);
     } else {
       message.error("删除失败");
     }
   };
 
   useEffect(() => {
-    handleGetHouseList(currentPage);
+    handleGetHouseList(currentPage, searchValue);
   }, [currentPage]);
 
   useEffect(() => {
@@ -145,10 +149,10 @@ const HouseManagement: react.FC = () => {
       const values = await form.validateFields();
       // 校验通过，获取表单值进行处理
       const parkImagesUrls = values?.images?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const labels =
         values.labels
@@ -180,7 +184,7 @@ const HouseManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("修改房源成功");
-        handleGetHouseList(currentPage);
+        handleGetHouseList(currentPage, searchValue);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
@@ -197,10 +201,10 @@ const HouseManagement: react.FC = () => {
       // 校验通过，获取表单值进行处理
       console.log("Validated values:", values, houseImagesFileList);
       const parkImagesUrls = values?.images?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const labels =
         values.labels
@@ -232,7 +236,7 @@ const HouseManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("添加房源成功");
-        handleGetHouseList(currentPage);
+        handleGetHouseList(currentPage, searchValue);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
@@ -250,7 +254,7 @@ const HouseManagement: react.FC = () => {
         data?.map((item: any) => ({
           label: item?.parkName,
           value: item?.id,
-        }))
+        })),
       );
     }
   };
@@ -259,11 +263,17 @@ const HouseManagement: react.FC = () => {
     const res = await setRecommendHouse(id, recommend);
     const { code, data } = res;
     if (code === 200) {
-      handleGetHouseList(currentPage);
+      handleGetHouseList(currentPage, searchValue);
       message.success(recommend === 0 ? "取消推荐成功" : "设置推荐成功");
     } else {
       message.success(recommend === 0 ? "取消推荐失败" : "设置推荐失败");
     }
+  };
+
+  const handelGetSearchValue = (value: string) => {
+    setSearchValue(value);
+    setCurrentPage(1);
+    handleGetHouseList(currentPage, value);
   };
 
   const column = [
@@ -420,7 +430,7 @@ const HouseManagement: react.FC = () => {
                   status: "done", // 表示该文件已经上传完成
                   url, // 图片的 URL
                   thumbUrl: url, // 确保显示缩略图
-                })
+                }),
               );
 
               setHouseImagesFileList(formattedImagesFileList);
@@ -501,9 +511,14 @@ const HouseManagement: react.FC = () => {
   return (
     <div>
       <Row gutter={16}>
-        {/* <Col className="gutter-row" span={6}>
-          <Search />
-        </Col> */}
+        <Col className="gutter-row" span={6}>
+          <Search
+            placeholder="请输入区域和详细地址进行搜索"
+            // style={{ width: "20rem" }}
+            onSearch={(value) => handelGetSearchValue(value)}
+            enterButton
+          />
+        </Col>
         <Col className="gutter-row" span={6}>
           <Button
             type="primary"

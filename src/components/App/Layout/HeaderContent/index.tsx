@@ -44,8 +44,15 @@ const HeaderContent: React.FC = () => {
     );
   };
   return (
-    <Fragment>
-      <Title level={3}>欣宁小程序后台管理系统</Title>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+      }}
+    >
+      <Title level={3}>小程序后台管理系统</Title>
       {/* <Popover
         placement="bottom"
         content={<PopoverContent />}
@@ -65,7 +72,7 @@ const HeaderContent: React.FC = () => {
       >
         <StyledAvater>{user?.name?.charAt(0)?.toUpperCase()}</StyledAvater>
       </Popover> */}
-    </Fragment>
+    </div>
   );
 };
 

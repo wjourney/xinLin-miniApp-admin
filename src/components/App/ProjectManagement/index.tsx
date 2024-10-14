@@ -46,10 +46,10 @@ const ProjectManagement: react.FC = () => {
   const [currentPage, setCurrentPage] = useState(1); // 当前页码
   const [modalType, setModalType] = useState(1); // 1是新增，2是编辑
   const [parkImagesFileList, setParkImagesFileList] = useState<UploadFile[]>(
-    []
+    [],
   );
   const [coverImageFileList, setCoverImageFileList] = useState<UploadFile[]>(
-    []
+    [],
   );
   const [managerData, setManagerData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -57,11 +57,12 @@ const ProjectManagement: react.FC = () => {
   const [form] = Form.useForm(); // 获取表单实例
   const [selectEditPark, setSelectEditPark] = useState(0);
 
-  const handleGetProjectList = async (pageNum: number) => {
+  const handleGetProjectList = async (pageNum: number, searchValue: string) => {
     setLoading(true);
     const res = await getProjectsList({
       pageNum: pageNum,
       pageSize: 10,
+      search: searchValue,
     });
     const { code, data } = res;
     if (code === 200) {
@@ -79,7 +80,7 @@ const ProjectManagement: react.FC = () => {
         data?.list?.map((item: any) => ({
           label: item?.name,
           value: item?.id,
-        }))
+        })),
       );
     }
   };
@@ -91,10 +92,10 @@ const ProjectManagement: react.FC = () => {
       console.log("valuse", values);
       // 校验通过，获取表单值进行处理
       const parkImagesUrls = values?.images?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const payload = {
         parkId: id,
@@ -119,7 +120,7 @@ const ProjectManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("添加项目成功");
-        handleGetProjectList(currentPage);
+        handleGetProjectList(currentPage, searchValue);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
@@ -128,8 +129,6 @@ const ProjectManagement: react.FC = () => {
       console.log("Failed:", errorInfo);
     }
   };
-
-  // const handleSetRecommend = () => {};
 
   const handleDeletePark = async (record: any) => {
     confirm({
@@ -147,13 +146,13 @@ const ProjectManagement: react.FC = () => {
     const res = await deleteProject(id);
     const { code, data } = res || {};
     if (code === 200) {
-      handleGetProjectList(currentPage);
+      handleGetProjectList(currentPage, searchValue);
     } else {
     }
   };
 
   useEffect(() => {
-    handleGetProjectList(currentPage);
+    handleGetProjectList(currentPage, searchValue);
   }, [currentPage]);
 
   useEffect(() => {
@@ -164,7 +163,7 @@ const ProjectManagement: react.FC = () => {
     const res = await setRecommendProject(id, recommend);
     const { code, data } = res;
     if (code === 200) {
-      handleGetProjectList(currentPage);
+      handleGetProjectList(currentPage, searchValue);
       message.success(recommend === 0 ? "取消推荐成功" : "设置推荐成功");
     } else {
       message.success(recommend === 0 ? "取消推荐失败" : "设置推荐失败");
@@ -179,10 +178,10 @@ const ProjectManagement: react.FC = () => {
 
       // 校验通过，获取表单值进行处理
       const parkImagesUrls = values?.images?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const payload = {
         address: values?.address,
@@ -203,7 +202,7 @@ const ProjectManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("添加项目成功");
-        handleGetProjectList(currentPage);
+        handleGetProjectList(currentPage, searchValue);
         form.resetFields();
       }
     } catch (errorInfo) {
@@ -226,6 +225,12 @@ const ProjectManagement: react.FC = () => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </button>
   );
+
+  const handelGetSearchValue = (value: string) => {
+    setSearchValue(value);
+    setCurrentPage(1);
+    handleGetProjectList(currentPage, value);
+  };
 
   const column = [
     {
@@ -374,7 +379,7 @@ const ProjectManagement: react.FC = () => {
                   status: "done", // 表示该文件已经上传完成
                   url, // 图片的 URL
                   thumbUrl: url, // 确保显示缩略图
-                })
+                }),
               );
 
               setParkImagesFileList(formattedImagesFileList);
@@ -425,9 +430,14 @@ const ProjectManagement: react.FC = () => {
   return (
     <div>
       <Row gutter={16}>
-        {/* <Col className="gutter-row" span={6}>
-          <Search />
-        </Col> */}
+        <Col className="gutter-row" span={6}>
+          <Search
+            placeholder="请输入区域和详细地址进行搜索"
+            // style={{ width: "20rem" }}
+            onSearch={(value) => handelGetSearchValue(value)}
+            enterButton
+          />
+        </Col>
         <Col className="gutter-row" span={6}>
           <Button
             type="primary"

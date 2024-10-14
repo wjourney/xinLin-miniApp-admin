@@ -5,6 +5,7 @@ import serviceAxios from './axios';
 export const getProjectsList = ({
   pageNum = 1,
   pageSize = 10,
+  search
 }: any): Promise<any> => {
   return serviceAxios({
     url: `/adm/parks`,
@@ -12,6 +13,7 @@ export const getProjectsList = ({
     params: {
       page: pageNum,
       size: pageSize,
+      search: search
     }
   });
 };

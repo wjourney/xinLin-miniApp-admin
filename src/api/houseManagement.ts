@@ -4,7 +4,7 @@ import serviceAxios from './axios';
 export const getHouseList = ({
   pageNum = 1,
   pageSize = 10,
-
+  search
 }: any): Promise<any> => {
   return serviceAxios({
     url: `/adm/houses`,
@@ -12,6 +12,7 @@ export const getHouseList = ({
     params: {
       page: pageNum,
       size: pageSize,
+      search
     }
   });
 };

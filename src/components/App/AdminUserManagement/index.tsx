@@ -153,7 +153,8 @@ const HouseManagement: react.FC = () => {
               setIsAddOrEditHouseModalVisible(true);
               setSelectEditHouse(record?.id);
               form.setFieldsValue({
-                ...record,
+                account: record,
+                nickname: record?.nickname,
               });
             }}
           >
@@ -236,14 +237,14 @@ const HouseManagement: react.FC = () => {
             name="account"
             rules={[{ required: true, message: "请输入账号名！" }]}
           >
-            <Input />
+            <Input disabled={modalType == 1 ? false : true} />
           </Form.Item>
           <Form.Item
             label="名字"
             name="nickname"
             rules={[{ required: true, message: "请输入名字！" }]}
           >
-            <Input />
+            <Input disabled={modalType == 1 ? false : true} />
           </Form.Item>
           <Form.Item
             label="密码"
