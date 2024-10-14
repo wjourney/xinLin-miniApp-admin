@@ -29,9 +29,25 @@ import {
 } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import { addNews, getNewsList, updateNews, deleteNews } from "@/api/index";
+import { Value } from "sass";
 
 const { Search } = Input;
 const { confirm } = Modal;
+
+const newsTypeList = [
+  {
+    label: "城市热点",
+    value: "城市热点",
+  },
+  {
+    label: "园区服务",
+    value: "园区服务",
+  },
+  {
+    label: "园区荣誉",
+    value: "园区荣誉",
+  },
+];
 
 const HouseManagement: react.FC = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -353,7 +369,8 @@ const HouseManagement: react.FC = () => {
             name="category"
             rules={[{ required: true, message: "请输入类别！" }]}
           >
-            <Input />
+            {/* <Input /> */}
+            <Select options={newsTypeList} />
           </Form.Item>
           <Form.Item label="链接" name="url">
             <Input placeholder="请输入链接" />

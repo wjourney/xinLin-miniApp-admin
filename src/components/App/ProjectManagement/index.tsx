@@ -112,15 +112,19 @@ const ProjectManagement: react.FC = () => {
         totalArea: values?.totalArea,
         totalFloor: values?.totalFloor,
         isRecommend: !!values?.isRecommend,
-        city: values?.city,
-        districtName: values?.districtName,
+        city: /^(?=.*市)(?!.*市.*市).*$/i.test(values?.city)
+          ? values?.city
+          : `${values?.city}市`,
+        districtName: /^(?=.*区)(?!.*区.*区).*$/i.test(values?.districtName)
+          ? values?.districtName
+          : `${values?.districtName}区`,
         price: values?.price,
       };
 
       const res = await updateProject(id, payload);
       const { code, data } = res;
       if (code === 200) {
-        message.success("添加项目成功");
+        message.success("修改项目成功");
         handleGetProjectList(currentPage, searchValue);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
@@ -198,6 +202,12 @@ const ProjectManagement: react.FC = () => {
         totalArea: values?.totalArea,
         totalFloor: values?.totalFloor,
         isRecommend: !!values?.isRecommend,
+        city: /^(?=.*市)(?!.*市.*市).*$/i.test(values?.city)
+          ? values?.city
+          : `${values?.city}市`,
+        districtName: /^(?=.*区)(?!.*区.*区).*$/i.test(values?.districtName)
+          ? values?.districtName
+          : `${values?.districtName}区`,
         price: values?.price,
       };
       const res = await addProject(payload);
@@ -205,6 +215,7 @@ const ProjectManagement: react.FC = () => {
       if (code === 200) {
         message.success("添加项目成功");
         handleGetProjectList(currentPage, searchValue);
+        setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
     } catch (errorInfo) {
@@ -476,6 +487,8 @@ const ProjectManagement: react.FC = () => {
         onCancel={() => {
           setIsAddOrEditHouseModalVisible(false);
           form.resetFields();
+          setCoverImageFileList([]);
+          setParkImagesFileList([]);
         }}
         title={modalType == 1 ? "新增项目" : "修改项目"}
         width={1300}
@@ -507,7 +520,7 @@ const ProjectManagement: react.FC = () => {
             rules={[{ required: true, message: "请输入地址！" }]}
             validateFirst
           >
-            <Input />
+            <Input placeholder="请输入城市，例如：上海市" />
           </Form.Item>
           <Form.Item
             label="区"

@@ -556,6 +556,8 @@ const HouseManagement: react.FC = () => {
         onCancel={() => {
           setIsAddOrEditHouseModalVisible(false);
           form.resetFields();
+          setCoverImageFileList([]);
+          setHouseImagesFileList([]);
         }}
         title={modalType == 1 ? "新增房源" : "修改房源"}
         width={1024}
