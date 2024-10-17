@@ -1,6 +1,5 @@
 import react, { Fragment, useState, useEffect } from "react";
 import {
-  Radio,
   Input,
   Space,
   Button,
@@ -16,38 +15,26 @@ import {
 import "./index.scss";
 import { ExclamationCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import type { GetProp, UploadFile, UploadProps } from "antd";
+import { getBanners, addBanner, updateBanner, deleteBanner } from "@/api/index";
 
-import {
-  getManagers,
-  addManager,
-  updateManager,
-  deleteManager,
-} from "@/api/index";
-
-const { Search } = Input;
 const { confirm } = Modal;
 
 const HouseManagement: react.FC = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [isAddOrEditManagerModalVisible, setIsAddOrEditManagerModalVisible] =
+  const [isAddOrEditHouseModalVisible, setIsAddOrEditBannerModalVisible] =
     useState(false);
   const [modalType, setModalType] = useState(1); // 1是新增，2是编辑
   const [listData, setListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // 当前页码
-
-  const [avatarImageFileList, setAvatarImageFileList] = useState<UploadFile[]>(
+  const [coverImageFileList, setCoverImageFileList] = useState<UploadFile[]>(
     [],
   );
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm(); // 获取表单实例
-  const [selectEditHouse, setSelectEditHouse] = useState(0);
+  const [selectEditBanner, setSelectEditHouse] = useState(0);
 
-  const handleGetManagerList = async (currentPage: number) => {
-    const res = await getManagers({
-      pageNum: currentPage,
-      pageSize: 10,
-    });
+  const handleGetBanners = async () => {
+    const res = await getBanners("news");
     const { code, data } = res;
     if (code === 200) {
       setListData(data?.list);
@@ -55,53 +42,52 @@ const HouseManagement: react.FC = () => {
     }
   };
 
-  const handleDeleteManager = async (record: any) => {
+  const handleDeleteBanner = async (record: any) => {
     confirm({
       icon: <ExclamationCircleOutlined />,
-      content: `确定删除${record?.name}招商顾问吗`,
+      content: `确定删除这条轮博图吗`,
       onOk() {
-        handleConfirmDeleteHouse(record?.id);
+        handleConfirmDeleteBanner(record?.id);
       },
       okText: "确认",
       cancelText: "取消",
     });
   };
 
-  const handleConfirmDeleteHouse = async (id: number) => {
-    const res = await deleteManager(id);
+  const handleConfirmDeleteBanner = async (id: number) => {
+    const res = await deleteBanner(id);
     const { code, data } = res || {};
     if (code === 200) {
-      handleGetManagerList(currentPage);
+      handleGetBanners();
     } else {
       message.error("删除失败");
     }
   };
 
   useEffect(() => {
-    handleGetManagerList(currentPage);
+    handleGetBanners();
   }, [currentPage]);
 
-  const handleEditManager = async (id: number) => {
+  const handleEditBanner = async (id: number) => {
     try {
       // 触发表单校验
       const values = await form.validateFields();
       // 校验通过，获取表单值进行处理
-
-      const avatarImageUrl = values?.thumbnail?.map(
+      const coverImageUrl = values?.thumbnail?.map(
         (item: any) => item?.response?.data?.url || item?.url,
       );
 
       const payload = {
-        thumb: avatarImageUrl?.[0],
-        name: values?.name,
-        phone: values?.phone,
+        title: values?.title,
+        url: coverImageUrl?.[0],
+        category: "news",
       };
-      const res = await updateManager(id, payload);
+      const res = await updateBanner(id, payload);
       const { code, data } = res;
       if (code === 200) {
-        message.success("修改招商顾问成功");
-        handleGetManagerList(currentPage);
-        setIsAddOrEditManagerModalVisible(false);
+        message.success("修改轮博图成功");
+        handleGetBanners();
+        setIsAddOrEditBannerModalVisible(false);
         form.resetFields();
       }
     } catch (errorInfo) {
@@ -110,26 +96,27 @@ const HouseManagement: react.FC = () => {
     }
   };
 
-  const handleAddManager = async () => {
+  const handleAddBanner = async () => {
     try {
       // 触发表单校验
       const values = await form.validateFields();
       // 校验通过，获取表单值进行处理
-      const avatarImageUrl = values?.thumbnail?.map(
+      console.log("Validated values:", values);
+
+      const coverImageUrl = values?.thumbnail?.map(
         (item: any) => item?.response?.data?.url || item?.url,
       );
-
       const payload = {
-        thumb: avatarImageUrl?.[0],
-        name: values?.name,
-        phone: values?.phone,
+        title: values?.title,
+        url: coverImageUrl?.[0],
+        category: "news",
       };
-      const res = await addManager(payload);
+      const res = await addBanner(payload);
       const { code, data } = res;
       if (code === 200) {
-        message.success("添加招商顾问成功");
-        handleGetManagerList(currentPage);
-        setIsAddOrEditManagerModalVisible(false);
+        message.success("添加轮博图成功");
+        handleGetBanners();
+        setIsAddOrEditBannerModalVisible(false);
         form.resetFields();
       }
     } catch (errorInfo) {
@@ -142,29 +129,23 @@ const HouseManagement: react.FC = () => {
     {
       title: "ID",
       dataIndex: "id",
-      width: 100,
     },
     {
-      title: "姓名",
-      dataIndex: "name",
-      width: 100,
+      title: "标题",
+      dataIndex: "title",
     },
     {
-      title: "电话",
-      dataIndex: "phone",
-      width: 100,
-    },
-
-    {
-      title: "照片",
-      dataIndex: "thumb",
+      title: "图片",
+      dataIndex: "url",
       render: (_: any, record: any) => (
-        <Image
-          style={{ width: 150, height: 150, objectFit: "cover" }}
-          src={record?.thumb}
-        />
+        <div style={{ width: 306, display: "flex", flexWrap: "wrap", gap: 6 }}>
+          <Image
+            style={{ width: 150, height: 150, objectFit: "cover" }}
+            src={record?.url}
+          />
+        </div>
       ),
-      width: 160,
+      width: 320,
     },
     {
       title: "操作",
@@ -175,16 +156,15 @@ const HouseManagement: react.FC = () => {
             type="link"
             onClick={() => {
               setModalType(2);
-              setIsAddOrEditManagerModalVisible(true);
+              setIsAddOrEditBannerModalVisible(true);
               setSelectEditHouse(record?.id);
-
-              setAvatarImageFileList([
+              setCoverImageFileList([
                 {
                   uid: `-1`, // 每个文件需要唯一的 uid
                   name: `image-${1}.jpg`, // 自定义一个文件名
                   status: "done", // 表示该文件已经上传完成
-                  url: record?.thumb, // 图片的 URL
-                  thumbUrl: record?.thumb, // 确保显示缩略图
+                  url: record?.url, // 图片的 URL
+                  thumbUrl: record?.url, // 确保显示缩略图
                 },
               ]);
               form.setFieldsValue({
@@ -194,8 +174,8 @@ const HouseManagement: react.FC = () => {
                     uid: `-1`, // 每个文件需要唯一的 uid
                     name: `image-${1}.jpg`, // 自定义一个文件名
                     status: "done", // 表示该文件已经上传完成
-                    url: record?.thumb, // 图片的 URL
-                    thumbUrl: record?.thumb, // 确保显示缩略图
+                    url: record?.url, // 图片的 URL
+                    thumbUrl: record?.url, // 确保显示缩略图
                   },
                 ],
               });
@@ -203,7 +183,7 @@ const HouseManagement: react.FC = () => {
           >
             编辑
           </Button>
-          <Button type="link" onClick={() => handleDeleteManager(record)}>
+          <Button type="link" onClick={() => handleDeleteBanner(record)}>
             删除
           </Button>
         </Space>
@@ -215,7 +195,7 @@ const HouseManagement: react.FC = () => {
 
   const handleUploadCoverImageChange: UploadProps["onChange"] = ({
     fileList: newFileList,
-  }) => setAvatarImageFileList(newFileList);
+  }) => setCoverImageFileList(newFileList);
 
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
@@ -227,18 +207,15 @@ const HouseManagement: react.FC = () => {
   return (
     <div>
       <Row gutter={16}>
-        {/* <Col className="gutter-row" span={6}>
-          <Search />
-        </Col> */}
         <Col className="gutter-row" span={6}>
           <Button
             type="primary"
             onClick={() => {
-              setIsAddOrEditManagerModalVisible(true);
+              setIsAddOrEditBannerModalVisible(true);
               setModalType(1);
             }}
           >
-            新增招商顾问
+            新增资讯页轮播图
           </Button>
         </Col>
       </Row>
@@ -263,20 +240,20 @@ const HouseManagement: react.FC = () => {
       </div>
 
       <Modal
-        open={isAddOrEditManagerModalVisible}
+        open={isAddOrEditHouseModalVisible}
         onCancel={() => {
-          setIsAddOrEditManagerModalVisible(false);
+          setIsAddOrEditBannerModalVisible(false);
           form.resetFields();
-          setAvatarImageFileList([]);
+          setCoverImageFileList([]);
         }}
-        title={modalType == 1 ? "新增招商顾问" : "修改招商顾问"}
+        title={modalType == 1 ? "新增轮博图" : "修改轮博图"}
         width={1024}
         okText="确认"
         cancelText="取消"
         onOk={
           modalType === 1
-            ? handleAddManager
-            : () => handleEditManager(selectEditHouse)
+            ? handleAddBanner
+            : () => handleEditBanner(selectEditBanner)
         }
         maskClosable={false}
       >
@@ -288,27 +265,20 @@ const HouseManagement: react.FC = () => {
           form={form}
         >
           <Form.Item
-            label="姓名"
-            name="name"
-            rules={[{ required: true, message: "请输入姓名！" }]}
+            label="标题"
+            name="title"
+            rules={[{ required: true, message: "请输入标题内容" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="电话"
-            name="phone"
-            rules={[{ required: true, message: "请输入城市！" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="照片"
+            label="图片"
             valuePropName="fileList"
             name="thumbnail"
             rules={[
               {
                 required: true,
-                message: "请上传封面图！",
+                message: "请上传轮博图图片！",
               },
             ]}
             getValueFromEvent={(e: any) => {
@@ -323,11 +293,11 @@ const HouseManagement: react.FC = () => {
               name="file"
               action="/adm/upload_image"
               maxCount={1}
-              fileList={avatarImageFileList}
+              fileList={coverImageFileList}
               onChange={handleUploadCoverImageChange}
               accept="image/*" // 只接受图片文件
             >
-              {avatarImageFileList.length >= 1 ? null : uploadButton}
+              {coverImageFileList.length >= 1 ? null : uploadButton}
             </Upload>
           </Form.Item>
         </Form>

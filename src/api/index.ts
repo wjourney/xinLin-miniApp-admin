@@ -228,3 +228,41 @@ export const checkUpdateMiniAppUserInfo= (userId: string, id: any, status: strin
   });
   };
   
+
+// 获取首页/资讯页横幅adm/banners
+export const getBanners = (category: string): Promise<any> => {
+  return serviceAxios({
+    url: `adm/banners`,
+    method: 'get',
+    params: {
+      category
+    }
+  });
+};
+
+// 新增横幅
+export const addBanner= (body:any): Promise<any> => {
+  return serviceAxios({
+    url: ` /adm/banner/add`,
+    method: 'post',
+    data: body
+  });
+  };
+  
+// 修改横幅
+export const updateBanner= (id: any, body: any): Promise<any> => {
+  return serviceAxios({
+    url: ` /adm/banner/update/${id}`,
+    method: 'put',
+    data: body
+  });
+};
+  
+  
+// 删除某个banner
+export const deleteBanner= (id: any): Promise<any> => {
+  return serviceAxios({
+    url: ` /adm/banner/${id}`,
+    method: 'delete',
+  }); 
+};

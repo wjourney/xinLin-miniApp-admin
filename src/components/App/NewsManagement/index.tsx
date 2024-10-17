@@ -50,19 +50,14 @@ const newsTypeList = [
 ];
 
 const HouseManagement: react.FC = () => {
-  const [searchValue, setSearchValue] = useState("");
   const [isAddOrEditHouseModalVisible, setIsAddOrEditNewsModalVisible] =
     useState(false);
   const [modalType, setModalType] = useState(1); // 1是新增，2是编辑
   const [listData, setListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // 当前页码
-  // const [houseImagesFileList, setHouseImagesFileList] = useState<UploadFile[]>(
-  //   []
-  // );
   const [coverImageFileList, setCoverImageFileList] = useState<UploadFile[]>(
     [],
   );
-  const [managerData, setManagerData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm(); // 获取表单实例
@@ -159,7 +154,7 @@ const HouseManagement: react.FC = () => {
       const res = await addNews(payload);
       const { code, data } = res;
       if (code === 200) {
-        message.success("添加房源成功");
+        message.success("添加资讯成功");
         handleGetNews(currentPage);
         setIsAddOrEditNewsModalVisible(false);
         form.resetFields();
@@ -338,8 +333,9 @@ const HouseManagement: react.FC = () => {
         onCancel={() => {
           setIsAddOrEditNewsModalVisible(false);
           form.resetFields();
+          setCoverImageFileList([]);
         }}
-        title={modalType == 1 ? "新增新闻" : "修改新闻"}
+        title={modalType == 1 ? "新增资讯轮博图" : "修改资讯轮博图"}
         width={1024}
         okText="确认"
         cancelText="取消"

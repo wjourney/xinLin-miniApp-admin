@@ -69,10 +69,10 @@ const HouseManagement: react.FC = () => {
   const [listData, setListData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // 当前页码
   const [houseImagesFileList, setHouseImagesFileList] = useState<UploadFile[]>(
-    []
+    [],
   );
   const [coverImageFileList, setCoverImageFileList] = useState<UploadFile[]>(
-    []
+    [],
   );
   const [managerData, setManagerData] = useState([]);
   const [total, setTotal] = useState(0);
@@ -102,7 +102,7 @@ const HouseManagement: react.FC = () => {
         data?.list?.map((item: any) => ({
           label: item?.name,
           value: item?.id,
-        }))
+        })),
       );
     }
     setLoading(false);
@@ -145,10 +145,10 @@ const HouseManagement: react.FC = () => {
       const values = await form.validateFields();
       // 校验通过，获取表单值进行处理
       const parkImagesUrls = values?.images?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const labels =
         values.labels
@@ -197,10 +197,10 @@ const HouseManagement: react.FC = () => {
       // 校验通过，获取表单值进行处理
       console.log("Validated values:", values, houseImagesFileList);
       const parkImagesUrls = values?.images?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const coverImageUrl = values?.thumbnail?.map(
-        (item: any) => item?.response?.data?.url || item?.url
+        (item: any) => item?.response?.data?.url || item?.url,
       );
       const labels =
         values.labels
@@ -250,7 +250,7 @@ const HouseManagement: react.FC = () => {
         data?.map((item: any) => ({
           label: item?.parkName,
           value: item?.id,
-        }))
+        })),
       );
     }
   };
@@ -395,7 +395,7 @@ const HouseManagement: react.FC = () => {
                   status: "done", // 表示该文件已经上传完成
                   url, // 图片的 URL
                   thumbUrl: url, // 确保显示缩略图
-                })
+                }),
               );
 
               setHouseImagesFileList(formattedImagesFileList);

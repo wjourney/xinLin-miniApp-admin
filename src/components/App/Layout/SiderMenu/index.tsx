@@ -83,12 +83,18 @@ const menuList: IMunuList[] = [
     label: "后台用户管理",
     role: ["admin"],
   },
-  // {
-  //   key: "/setting",
-  //   icon: <DotChartOutlined />,
-  //   label: "公司信息管理",
-  //   role: ["admin"],
-  // },
+  {
+    key: "/homeBannerSetting",
+    icon: <DotChartOutlined />,
+    label: "首页页横幅管理",
+    role: ["admin"],
+  },
+  {
+    key: "/newsBannerSetting",
+    icon: <DotChartOutlined />,
+    label: "资讯页横幅管理",
+    role: ["admin"],
+  },
 ];
 
 const SiderMenu: React.FC = () => {
