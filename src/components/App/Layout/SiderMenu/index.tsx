@@ -86,13 +86,13 @@ const menuList: IMunuList[] = [
   {
     key: "/homeBannerSetting",
     icon: <DotChartOutlined />,
-    label: "首页页横幅管理",
+    label: "首页轮博图管理",
     role: ["admin"],
   },
   {
     key: "/newsBannerSetting",
     icon: <DotChartOutlined />,
-    label: "资讯页横幅管理",
+    label: "资讯页轮博图管理",
     role: ["admin"],
   },
 ];
