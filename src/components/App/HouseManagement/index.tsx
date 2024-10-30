@@ -548,7 +548,7 @@ const HouseManagement: react.FC = () => {
         </Col>
         <Col className="gutter-row" span={6}>
           <Select
-            // style={{ width: "20rem" }}
+            style={{ width: "100%" }}
             placeholder="请选择园区进行搜索"
             // onSearch={(value) => handelGetSearchValue(value)}
             options={allProjectOptions?.map((item: any) => ({
@@ -560,6 +560,11 @@ const HouseManagement: react.FC = () => {
               setSelectParkName(value);
               setCurrentPage(1);
               handleGetHouseList(currentPage, searchValue, value);
+            }}
+            onClear={() => {
+              setSelectParkName("");
+              setCurrentPage(1);
+              handleGetHouseList(currentPage, searchValue, "");
             }}
           />
         </Col>
