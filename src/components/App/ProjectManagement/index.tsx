@@ -119,6 +119,8 @@ const ProjectManagement: react.FC = () => {
           ? values?.districtName
           : `${values?.districtName}区`,
         price: values?.price,
+        phone: values?.phone,
+        sortIndex: values?.sortIndex,
       };
 
       const res = await updateProject(id, payload);
@@ -209,6 +211,8 @@ const ProjectManagement: react.FC = () => {
           ? values?.districtName
           : `${values?.districtName}区`,
         price: values?.price,
+        phone: values?.phone,
+        sortIndex: values?.sortIndex,
       };
       const res = await addProject(payload);
       const { code, data } = res;
@@ -313,6 +317,11 @@ const ProjectManagement: react.FC = () => {
       width: 80,
     },
     {
+      title: "电话",
+      dataIndex: "phone",
+      width: 120,
+    },
+    {
       title: "招商顾问",
       dataIndex: "managers",
       width: 200,
@@ -350,6 +359,27 @@ const ProjectManagement: react.FC = () => {
             .replace(/\//g, "-")
             .slice(0, -3)}
         </div>
+      ),
+    },
+    {
+      title: " 更新时间",
+      dataIndex: "updatedAt",
+      width: 100,
+      render: (value) => (
+        <div>
+          {new Date(value)
+            .toLocaleString("zh-CN", { hour12: false })
+            .replace(/\//g, "-")
+            .slice(0, -3)}
+        </div>
+      ),
+    },
+    {
+      title: "最后操作人",
+      dataIndex: "updator",
+      width: 100,
+      render: (value, record) => (
+        <div>{record?.sysAdmin === null ? "-" : record?.sysAdmin?.account}</div>
       ),
     },
     {
@@ -528,7 +558,7 @@ const ProjectManagement: react.FC = () => {
             rules={[{ required: true, message: "请输入地址！" }]}
             validateFirst
           >
-            <Input />
+            <Input placeholder="请输入园区所在区域" />
           </Form.Item>
           <Form.Item
             label="详细地址"
@@ -536,7 +566,7 @@ const ProjectManagement: react.FC = () => {
             rules={[{ required: true, message: "请输入地址！" }]}
             validateFirst
           >
-            <Input />
+            <Input placeholder="请输入园区详细地址" />
           </Form.Item>
           <Form.Item
             label="经度"
@@ -544,7 +574,7 @@ const ProjectManagement: react.FC = () => {
             rules={[{ required: true, message: "请输入经度！" }]}
             validateFirst
           >
-            <InputNumber />
+            <InputNumber style={{ width: "100%" }} placeholder="请输入经度" />
           </Form.Item>
           <Form.Item
             label="纬度"
@@ -552,7 +582,7 @@ const ProjectManagement: react.FC = () => {
             rules={[{ required: true, message: "请输入纬度！" }]}
             validateFirst
           >
-            <InputNumber />
+            <InputNumber style={{ width: "100%" }} placeholder="请输入纬度" />
           </Form.Item>
           <Form.Item
             label="公司"
@@ -563,12 +593,29 @@ const ProjectManagement: react.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
+            label="电话"
+            name="phone"
+            rules={[{ required: true, message: "请输入电话！" }]}
+          >
+            <Input placeholder="请输入园区联系电话" />
+          </Form.Item>
+          <Form.Item
+            label="排序"
+            name="sortIndex"
+            rules={[{ required: true, message: "请输入园区排序！" }]}
+          >
+            <InputNumber
+              placeholder="请输入园区排序，数字越大表示排序越靠前"
+              style={{ width: "100%" }}
+            />
+          </Form.Item>
+          <Form.Item
             label="建筑面积"
             name="totalArea"
             rules={[{ required: true, message: "请输入建筑面积！" }]}
             validateFirst
           >
-            <InputNumber />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             label="楼层数"
@@ -583,11 +630,12 @@ const ProjectManagement: react.FC = () => {
             name="floorHeight"
             rules={[{ required: true, message: "请输入标准层层高!" }]}
           >
-            <InputNumber />
+            <InputNumber style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             label="价格范围"
             name="price"
+            tooltip="请请输入正确的价格范围，输入用-符号分隔的字符串，比如1.5-3.5，或者输入一个纯数字输入正确的价格范围"
             rules={[
               {
                 required: true,
@@ -596,12 +644,12 @@ const ProjectManagement: react.FC = () => {
               {
                 pattern: /^\d+(\.\d+)?(-\d+(\.\d+)?)?$/,
                 message:
-                  "请请输入正确的价格范围，输入用-符号分隔的字符串，比如1.5-3.5，或者输入一个纯数字输入正确的价格范围",
+                  "请输入正确的价格范围，输入用-符号分隔的字符串，比如1.5-3.5，或者输入一个纯数字",
               },
             ]}
             validateFirst
           >
-            <Input placeholder="请请输入正确的价格范围，输入用-符号分隔的字符串，比如1.5-3.5，或者输入一个纯数字输入正确的价格范围" />
+            <Input placeholder="请输入正确的价格范围，输入用-符号分隔的字符串，比如1.5-3.5，或者输入一个纯数字" />
           </Form.Item>
           {/* <Form.Item
             label="标签"

@@ -384,6 +384,27 @@ const HouseManagement: react.FC = () => {
       ),
     },
     {
+      title: "更新时间",
+      dataIndex: "updatedAt",
+      width: 100,
+      render: (value) => (
+        <div>
+          {new Date(value)
+            .toLocaleString("zh-CN", { hour12: false })
+            .replace(/\//g, "-")
+            .slice(0, -3)}
+        </div>
+      ),
+    },
+    {
+      title: "最后操作人",
+      dataIndex: "updator",
+      width: 120,
+      render: (value, record) => (
+        <div>{record?.sysAdmin === null ? "-" : record?.sysAdmin?.account}</div>
+      ),
+    },
+    {
       title: "房源图片",
       dataIndex: "latitude",
       render: (_: any, record: any) => (
@@ -513,7 +534,7 @@ const HouseManagement: react.FC = () => {
       <Row gutter={16}>
         <Col className="gutter-row" span={6}>
           <Search
-            placeholder="请输入区域和详细地址进行搜索"
+            placeholder="请输入园区和详细地址进行搜索"
             // style={{ width: "20rem" }}
             onSearch={(value) => handelGetSearchValue(value)}
             enterButton
