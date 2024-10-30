@@ -42,6 +42,7 @@ import {
   addProject,
   updateProject,
 } from "@/api/projectManagement";
+import { it } from "node:test";
 
 const { Search } = Input;
 const { confirm } = Modal;
@@ -80,16 +81,20 @@ const HouseManagement: react.FC = () => {
   const [form] = Form.useForm(); // 获取表单实例
   const [allProjectOptions, setAllProjectOptions] = useState([]);
   const [selectEditHouse, setSelectEditHouse] = useState(0);
+  const [selectParkName, setSelectParkName] = useState("");
 
   const handleGetHouseList = async (
     currentPage: number,
     searchValue: string,
+    parkName: string,
   ) => {
     const res = await getHouseList({
       pageNum: currentPage,
       pageSize: 10,
-      search: searchValue,
+      parkName: parkName,
+      address: searchValue,
     });
+    console.log("parkName", parkName);
     const { code, data } = res;
     if (code === 200) {
       setListData(data?.list);
@@ -128,14 +133,14 @@ const HouseManagement: react.FC = () => {
     const res = await deleteHouse(id);
     const { code, data } = res || {};
     if (code === 200) {
-      handleGetHouseList(currentPage, searchValue);
+      handleGetHouseList(currentPage, searchValue, selectParkName);
     } else {
       message.error("删除失败");
     }
   };
 
   useEffect(() => {
-    handleGetHouseList(currentPage, searchValue);
+    handleGetHouseList(currentPage, searchValue, selectParkName);
   }, [currentPage]);
 
   useEffect(() => {
@@ -184,7 +189,7 @@ const HouseManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("修改房源成功");
-        handleGetHouseList(currentPage, searchValue);
+        handleGetHouseList(currentPage, searchValue, selectParkName);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
@@ -236,7 +241,7 @@ const HouseManagement: react.FC = () => {
       const { code, data } = res;
       if (code === 200) {
         message.success("添加房源成功");
-        handleGetHouseList(currentPage, searchValue);
+        handleGetHouseList(currentPage, searchValue, selectParkName);
         setIsAddOrEditHouseModalVisible(false);
         form.resetFields();
       }
@@ -263,7 +268,7 @@ const HouseManagement: react.FC = () => {
     const res = await setRecommendHouse(id, recommend);
     const { code, data } = res;
     if (code === 200) {
-      handleGetHouseList(currentPage, searchValue);
+      handleGetHouseList(currentPage, searchValue, selectParkName);
       message.success(recommend === 0 ? "取消推荐成功" : "设置推荐成功");
     } else {
       message.success(recommend === 0 ? "取消推荐失败" : "设置推荐失败");
@@ -273,7 +278,7 @@ const HouseManagement: react.FC = () => {
   const handelGetSearchValue = (value: string) => {
     setSearchValue(value);
     setCurrentPage(1);
-    handleGetHouseList(currentPage, value);
+    handleGetHouseList(currentPage, value, selectParkName);
   };
 
   const column = [
@@ -534,10 +539,28 @@ const HouseManagement: react.FC = () => {
       <Row gutter={16}>
         <Col className="gutter-row" span={6}>
           <Search
-            placeholder="请输入园区和详细地址进行搜索"
+            placeholder="请输入详细地址进行搜索"
             // style={{ width: "20rem" }}
             onSearch={(value) => handelGetSearchValue(value)}
             enterButton
+            allowClear
+          />
+        </Col>
+        <Col className="gutter-row" span={6}>
+          <Select
+            // style={{ width: "20rem" }}
+            placeholder="请选择园区进行搜索"
+            // onSearch={(value) => handelGetSearchValue(value)}
+            options={allProjectOptions?.map((item: any) => ({
+              label: item?.label,
+              value: item?.label,
+            }))}
+            allowClear
+            onSelect={(value) => {
+              setSelectParkName(value);
+              setCurrentPage(1);
+              handleGetHouseList(currentPage, searchValue, value);
+            }}
           />
         </Col>
         <Col className="gutter-row" span={6}>
@@ -552,25 +575,28 @@ const HouseManagement: react.FC = () => {
           </Button>
         </Col>
       </Row>
-      <div style={{ width: "100%", overflowX: "auto" }}>
-        <Table
-          tableLayout="fixed"
-          dataSource={listData}
-          style={{ marginTop: 24 }}
-          columns={column}
-          loading={loading}
-          scroll={{ x: 1000 }} // 设置横向和纵向滚动
-          pagination={{
-            current: currentPage,
-            total: total,
-            pageSize: 10,
-            showTotal: (total) => `共 ${total} 条`,
-          }}
-          onChange={(pagination: any) => {
-            setCurrentPage(pagination.current);
-          }}
-        />
-      </div>
+      {/* <div style={{ width: "100%", overflowX: "auto" }}> */}
+      <Table
+        tableLayout="fixed"
+        dataSource={listData}
+        style={{
+          marginTop: 24,
+          height: "calc(100vh - 180px)",
+        }}
+        columns={column}
+        scroll={{ x: "max-content", y: "calc(100vh - 360px)" }} // 设置横向和纵向滚动
+        loading={loading}
+        pagination={{
+          current: currentPage,
+          total: total,
+          pageSize: 10,
+          showTotal: (total) => `共 ${total} 条`,
+        }}
+        onChange={(pagination: any) => {
+          setCurrentPage(pagination.current);
+        }}
+      />
+      {/* </div> */}
 
       <Modal
         open={isAddOrEditHouseModalVisible}

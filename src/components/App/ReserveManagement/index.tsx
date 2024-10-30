@@ -219,6 +219,7 @@ const HouseManagement: react.FC = () => {
             // style={{ width: "20rem" }}
             onSearch={(value) => handelGetSearchValue(value)}
             enterButton
+            allowClear
           />
         </Col>
       </Row>
@@ -226,10 +227,13 @@ const HouseManagement: react.FC = () => {
         <Table
           tableLayout="fixed"
           dataSource={listData}
-          style={{ marginTop: 24 }}
+          style={{
+            marginTop: 24,
+            height: "calc(100vh - 200px)",
+          }}
           columns={column}
+          scroll={{ x: "max-content", y: "calc(100vh - 340px)" }} // 设置横向和纵向滚动
           loading={loading}
-          scroll={{ x: 1000 }} // 设置横向和纵向滚动
           pagination={{
             current: currentPage,
             total: total,
