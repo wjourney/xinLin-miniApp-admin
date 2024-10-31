@@ -346,7 +346,7 @@ const ProjectManagement: react.FC = () => {
     {
       title: "介绍",
       dataIndex: "introduce",
-      width: 80,
+      width: 280,
     },
     {
       title: "顺序",
